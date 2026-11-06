@@ -103,7 +103,7 @@ textarea{min-height:240px;resize:vertical;line-height:1.6}
 .res{font-family:var(--f-mono);font-size:15px;font-variant-numeric:tabular-nums}
 .res b{color:var(--ledger)}
 
-/* essay */
+/* общи компоненти (бутони, филтри, таблици, отворени задачи) */
 .topics{display:grid;gap:8px}
 .topic{text-align:left;font:inherit;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;cursor:pointer}
 .topic[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft)}
@@ -167,6 +167,13 @@ table.fill tr.ok td{background:var(--ledger-soft)} table.fill tr.no td{backgroun
 .filt.sub .segb{font-size:12.5px;padding:4px 10px}
 .segb.led[aria-pressed="true"]{background:var(--ledger);border-color:var(--ledger)}
 .inst{border-color:var(--accent)}
+.gtab input{width:5.5em;text-align:right;font-family:var(--f-mono)}
+.opt input[type=radio]{margin:3px 0 0;flex:none;accent-color:var(--accent)}
+label.opt{cursor:pointer}
+label.opt:has(input:checked){border-color:var(--accent);background:var(--accent-soft)}
+.tq.ok{border-color:var(--good)} .tq.no{border-color:var(--bad)}
+.tfb:empty{display:none}
+.tq label.opt.ok{border-color:var(--good);background:var(--ledger-soft)} .tq label.opt.no{border-color:var(--bad);background:var(--bad-soft)}
 /* progress */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat{border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}
@@ -177,7 +184,7 @@ svg text{fill:var(--muted);font-family:var(--f-body);font-size:11px}
 /* tab bar */
 nav.tabs{position:fixed;left:0;right:0;bottom:0;z-index:6;background:var(--surface);border-top:1px solid var(--line);
   padding-bottom:env(safe-area-inset-bottom,0px);padding-left:env(safe-area-inset-left,0px);padding-right:env(safe-area-inset-right,0px)}
-nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(5,1fr)}
+nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr)}
 .tab{font:inherit;font-size:11.5px;font-weight:500;color:var(--muted);background:none;border:0;padding:9px 2px 10px;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
 .tab svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.7}
 .tab[aria-current="page"]{color:var(--accent)}
@@ -194,7 +201,6 @@ nav.tabs .in{max-width:560px;margin:0 auto;display:grid;grid-template-columns:re
 <nav class="tabs" aria-label="Модули"><div class="in">
   <button class="tab" data-v="home"><svg viewBox="0 0 24 24"><path d="M4 11l8-6 8 6v8a1 1 0 0 1-1 1h-4v-6h-6v6H5a1 1 0 0 1-1-1z"/></svg>Начало</button>
   <button class="tab" data-v="bel"><svg viewBox="0 0 24 24"><path d="M5 4h10l4 4v12H5z"/><path d="M8 12h8M8 16h5"/></svg>БЕЛ тест</button>
-  <button class="tab" data-v="essay"><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg>Есе</button>
   <button class="tab" data-v="acc"><svg viewBox="0 0 24 24"><path d="M4 5h16v14H4z"/><path d="M12 5v14M4 9h16"/></svg>Казуси</button>
   <button class="tab" data-v="progress"><svg viewBox="0 0 24 24"><path d="M5 19V11M12 19V5M19 19v-8"/></svg>Прогрес</button>
 </div></nav>
@@ -229,84 +235,7 @@ let TOPICS=[
  {kind:"Интерпретативно съчинение",t:"Копнежът по дома в „Да се завърнеш в бащината къща“ на Димчо Дебелянов",author:"Дебелянов",work:"бащината къща"},
  {kind:"Интерпретативно съчинение",t:"Любовта като духовно откровение в „Колко си хубава!“ на Христо Фотев",author:"Фотев",work:"Колко си хубава"}
 ];
-const SAMPLES=[
- {paras:[
-  {role:"intro",thesis:"Затова смятам, че свободата е едновременно дар и отговорност: получаваме я наготово, но я запазваме само ако отговаряме за изборите си.",
-   text:"Всеки иска да бъде свободен, но малцина се питат какво следва, след като свободата вече е тяхна. Тя рядко идва като подарък от нищото – обикновено е извоювана от някого и предадена на нас. Затова смятам, че свободата е едновременно дар и отговорност: получаваме я наготово, но я запазваме само ако отговаряме за изборите си.",
-   note:"Уводът започва с въпрос, близък до читателя, и стига до теза в последното изречение. Тезата отговаря пряко на темата и подсказва двата аргумента."},
-  {role:"arg",ex:"Литературен пример: Ботев, „Хаджи Димитър“",
-   text:"На първо място, свободата е дар, защото повечето от нас не са платили цената ѝ. Българската литература пази паметта за онези, които са я платили. Ботевият герой в „Хаджи Димитър“ умира в Балкана, но смъртта му не е безсмислена – тя се превръща в безсмъртие, защото е дадена за другите. Ние сме наследници на тази саможертва, а наследството задължава.",
-   note:"Твърдение → пример от литературата → връзка с тезата („наследството задължава“). Примерът не е преразказ, а работи за аргумента."},
-  {role:"arg",ex:"Пример от живота: подготовката за матурата",
-   text:"От друга страна, свободата се превръща в отговорност в мига, в който трябва да избираме. Ученикът, който сам решава как да се подготви за матурата, е по-свободен от онзи, когото принуждават. Но той е и единственият отговорен, ако не се подготви. Свободата премахва оправданията – не можем да посочим друг, когато сгрешим.",
-   note:"Близък пример, който всеки читател разпознава. Свързващият израз „От друга страна“ показва прехода към втората част на тезата."},
-  {role:"arg",strong:true,ex:"Контрааргумент и обществен принцип",
-   text:"Някои биха казали, че отговорността ограничава свободата и я превръща в бреме. Всъщност е обратното. Свобода без отговорност се превръща в своеволие, което рано или късно отнема свободата на другите. Затова в обществото правата вървят ръка за ръка със задълженията – моята свобода свършва там, където започва свободата на другия.",
-   note:"Най-силният абзац: авторът сам повдига възражение и го опровергава. Това показва зрялост на мисленето и прави тезата по-убедителна."},
-  {role:"concl",
-   text:"Следователно свободата е дар, който не може просто да се притежава – той трябва да се пази. Получаваме я от миналото, но нейното бъдеще зависи от нас. Да бъдеш свободен означава да избираш и да отговаряш за избора си.",
-   note:"Изводът повтаря тезата с нови думи и я разширява към бъдещето. Няма нови аргументи, а последното изречение звучи като завършек."}],
-  why:["Тезата е ясна и стои на очаквано място – в края на увода.","Три аргумента, всеки с различен тип пример: литература, личен опит, обществен принцип.","Контрааргументът е назован и опроверган.","Абзаците са свързани: „На първо място“, „От друга страна“, „Затова“, „Следователно“.","Изводът се връща към тезата, без да я преписва."]},
-
- {paras:[
-  {role:"intro",thesis:"Според мен човек може да намери спокойствие сам, но истинското щастие се ражда в отношенията с другите.",
-   text:"Съвременният човек живее заобиколен от хора и екрани, но често се чувства самотен. Това поражда въпроса дали щастието изобщо зависи от другите. Според мен човек може да намери спокойствие сам, но истинското щастие се ражда в отношенията с другите.",
-   note:"Уводът тръгва от наблюдение за днешния свят и превръща темата във въпрос. Тезата не е просто „да“ или „не“, а разграничава спокойствие от щастие."},
-  {role:"arg",ex:"Пример: уединението на твореца",
-   text:"На първо място, самотата не винаги е нещастие. Много творци търсят уединение, за да създават. Времето насаме помага на човека да разбере какво иска и кой е. Без него щастието с другите би било зависимост, а не избор.",
-   note:"Авторът започва с отстъпка към противоположната позиция. Така тезата изглежда обмислена, а не едностранчива."},
-  {role:"arg",strong:true,ex:"Литературен пример: Елин Пелин, „Ветрената мелница“",
-   text:"От друга страна, радостта, която не е споделена, бързо избледнява. В разказа „Ветрената мелница“ на Елин Пелин радостта на Лазо е в песента, закачките и любовта – тя става пълна едва когато е споделена с другите. Човекът е социално същество и се разпознава в отношенията си.",
-   note:"Най-силният абзац: конкретен пример от изучавано произведение, свързан с общо твърдение за човека."},
-  {role:"arg",ex:"Личен опит",
-   text:"Освен това личният опит потвърждава тази мисъл. Успехът на изпит, рожденият ден или дори хубавият залез ни карат веднага да потърсим някого, с когото да ги споделим. Щастието сякаш изисква свидетел.",
-   note:"Кратък, но точен аргумент. Последното изречение обобщава мисълта в запомняща се формула."},
-  {role:"concl",
-   text:"В заключение, човек може да бъде спокоен сам, но щастлив става с другите. Уединението ни помага да познаем себе си, а близките ни помагат да се радваме на това, което сме открили.",
-   note:"Изводът събира двете части на тезата в едно балансирано изречение."}],
-  why:["Тезата прави разграничение (спокойствие и щастие) вместо да отговаря с „да“ или „не“.","Отстъпка към другата позиция в първия аргумент.","Пример от литературата и пример от личния опит.","Ясни преходи между абзаците.","Изводът е кратък и балансиран."]},
-
- {paras:[
-  {role:"intro",thesis:"Стихотворението „Да се завърнеш в бащината къща“ изгражда образа на дома като място на покой и прошка, но копнежът по него остава неосъществим.",
-   text:"Домът е първото място, където човек се чувства приет. Когато светът стане чужд и враждебен, мисълта се връща именно там. Стихотворението „Да се завърнеш в бащината къща“ изгражда образа на дома като място на покой и прошка, но копнежът по него остава неосъществим.",
-   note:"Интерпретативната теза назовава произведението, автора (вече ясен от темата) и двете посоки на анализа: какво е домът и защо копнежът е неосъществим."},
-  {role:"arg",ex:"Анализ: неопределените глаголни форми",
-   text:"На първо място, завръщането е представено като мечта, а не като действителност. Още заглавието започва с неопределена форма – „да се завърнеш“. Лирическият говорител не разказва какво се е случило, а си представя какво би могло да бъде. Така от самото начало домът е отдалечен в света на желаното.",
-   note:"Аргументът опира на конкретно наблюдение върху езика на текста. Това е типично за силното интерпретативно съчинение."},
-  {role:"arg",strong:true,ex:"Анализ: образът на майката",
-   text:"Освен това бащината къща е свързана с образа на майката, която посреща сина на прага. Тя не задава въпроси и не съди – само приема. Домът е мястото, където уморената душа може да остави товара си и да бъде простена. Именно тази безусловна прошка липсва в света на скитника.",
-   note:"Най-силният абзац: образът е изтълкуван, а не само назован. Последното изречение връща анализа към тезата."},
-  {role:"arg",ex:"Анализ: контрастът мечта – реалност",
-   text:"От друга страна, мечтаната картина рязко контрастира със състоянието на лирическия говорител. Той се усеща като чужд, изгубил пътя си, неспособен да се върне към някогашната чистота. Колкото по-светла е представата за дома, толкова по-тежка става самотата му.",
-   note:"Контрастът е ключ към смисъла на текста. Аргументът обяснява защо копнежът е неосъществим – втората част на тезата."},
-  {role:"concl",
-   text:"Следователно бащината къща в стихотворението на Дебелянов е повече от място – тя е символ на изгубената хармония. Копнежът по нея говори за вечната човешка нужда от приемане, а невъзможността за завръщане прави този копнеж още по-силен.",
-   note:"Изводът извежда смисъла на символа и го свързва с общочовешки проблем."}],
-  why:["Тезата съдържа двата аспекта на анализа.","Всеки аргумент стъпва на наблюдение върху текста – глаголна форма, образ, контраст.","Има тълкуване, а не преразказ.","Изводът достига до символния смисъл на дома."]},
-
- {paras:[
-  {role:"intro",thesis:"В „Колко си хубава!“ Христо Фотев представя любовта като духовно откровение – миг, в който човек вижда другия и света по нов начин.",
-   text:"Любовта често се описва като чувство, но понякога тя е по-скоро прозрение. В „Колко си хубава!“ Христо Фотев представя любовта като духовно откровение – миг, в който човек вижда другия и света по нов начин.",
-   note:"Кратък увод, който веднага стига до теза. Понятието „откровение“ от темата е обяснено със собствени думи."},
-  {role:"arg",ex:"Анализ: повторението в заглавието и текста",
-   text:"На първо място, стихотворението е изградено като възклицание. Повтарящата се фраза от заглавието звучи като изненада, която не може да бъде изказана докрай. Лирическият говорител не описва любимата подробно, а отново и отново се връща към удивлението си. Повторението показва, че преживяването е по-голямо от думите.",
-   note:"Аргументът тръгва от формата на текста и стига до смисъла ѝ. Не е нужно дълго цитиране – наблюдението е достатъчно."},
-  {role:"arg",strong:true,ex:"Анализ: любимата като чудо",
-   text:"Освен това любимата е видяна не като обикновен човек, а като чудо. Говорът към нея е прост и пряк, почти разговорен, но точно тази простота прави възхищението искрено. Любовта не украсява света с думи, а разкрива красотата, която винаги е била там.",
-   note:"Най-силният абзац: интерпретацията свързва стила (простотата) със смисъла (искреността). Това носи точки за задълбоченост."},
-  {role:"concl",
-   text:"Следователно стихотворението на Фотев показва любовта като момент на прозрение. Тя не е притежание, а удивление, което прави човека по-чувствителен към света. Затова текстът звучи свежо и днес – всеки, който е обичал, разпознава това удивление.",
-   note:"Изводът потвърждава тезата и я свързва с опита на днешния читател."}],
-  why:["Тезата обяснява със собствени думи понятието от темата.","Анализът тръгва от формата (възклицание, повторение) и стига до смисъла.","Стилът е изтълкуван, а не само описан.","Изводът свързва текста с днешния читател."]}
-];
-const ISQ=[
- ["Тезата назовава автора, творбата и аспекта от темата","Пример: „В … Дебелянов представя дома като …“ — не обща мисъл за дома изобщо."],
- ["Всеки аргумент анализира конкретен елемент от творбата","Образ, мотив, художествено средство, композиция, заглавие, лирически говорител."],
- ["Цитатите са кратки и вплетени в изречението","Цитатът подкрепя мисълта, не я замества. Няколко думи са по-добре от цяла строфа."],
- ["След всеки цитат или факт следва тълкуване","„Това показва, че…“, „Така се внушава…“. Ако изречението само казва какво се случва, това е преразказ."],
- ["Не отклонявам към личен опит","В ИС опората е текстът на творбата. Личният опит е уместен най-много в увода или извода."],
- ["Изводът връща към темата и обобщава смисъла","Какво в крайна сметка внушава творбата по проблема от темата."]];
-const STEMMAP={home:"STEM",bel:"ST",essay:"TE",acc:"STM",progress:"SM",teacher:"TE"};
+const STEMMAP={home:"STEM",bel:"ST",acc:"STM",progress:"SM",teacher:"TE",tests:"STM"};
 
 /* ---------- състояние ---------- */
 const store={get(k,d){try{const v=localStorage.getItem("ml_"+k);return v?JSON.parse(v):d}catch(e){return d}},set(k,v){try{localStorage.setItem("ml_"+k,JSON.stringify(v))}catch(e){}}};
@@ -328,7 +257,7 @@ const accSorted=()=>Object.entries(ACC).sort((a,b)=>a[0].localeCompare(b[0]));
 const accOptions=()=>{let h=`<option value="">—</option>`,sec="";for(const [k,v] of accSorted()){if(k[0]!==sec){if(sec)h+="</optgroup>";sec=k[0];h+=`<optgroup label="${k[0]} · ${ACC_SEC[k[0]]||"Други"}">`}h+=`<option value="${k}">${k} ${esc(v)}</option>`}return h+(sec?"</optgroup>":"")};
 const ACAT=c=>({num:"Изчисления",table:"Таблици"})[c.type]||"Счетоводни статии";
 function recordSkip(mod,cat){if(stats.demo)stats=EMPTY();stats.skip[mod][cat]=(stats.skip[mod][cat]||0)+1;store.set("stats",stats)}
-let qi=0, ci=0, essayTopic=0;
+let qi=0, ci=0;
 const filt={bel:store.get("fbel",""),acc:store.get("facc","")};
 const catOf={bel:q=>q.topic||"Общи",acc:c=>c.group||ACAT(c)};
 const listOf=m=>{const arr=m==="bel"?BEL:CASES,f=filt[m];if(f&&!arr.some(x=>catOf[m](x)===f))filt[m]="";return arr.map((x,i)=>[x,i]).filter(([x])=>!filt[m]||catOf[m](x)===filt[m]).map(([,i])=>i)};
@@ -339,17 +268,6 @@ const wireFilt=m=>{const f=view.querySelector(".filt"),act=f&&f.querySelector('[
 const nextCat=m=>{if(!filt[m])return "";const cs=[...new Set((m==="bel"?BEL:CASES).map(catOf[m]))],i=cs.indexOf(filt[m]);return cs[i+1]||""};
 const ncBtn=m=>{const n=nextCat(m);return n?`<button class="btn ghost" id="nextcat">Следваща категория: ${esc(n)}</button>`:""};
 const wireNc=m=>{const b=$("#nextcat");if(b)b.onclick=()=>practice(m,nextCat(m))};
-const efilt={kind:store.get("fekind",""),author:store.get("feauth","")};
-const authOf=t=>t.kind==="Есе"?"":(t.author||"Други");
-const essayList=()=>{if(efilt.kind&&!TOPICS.some(t=>t.kind===efilt.kind))efilt.kind="";
- if(efilt.author&&!TOPICS.some(t=>t.kind===efilt.kind&&authOf(t)===efilt.author))efilt.author="";
- return TOPICS.map((t,i)=>[t,i]).filter(([t])=>(!efilt.kind||t.kind===efilt.kind)&&(!efilt.author||authOf(t)===efilt.author)).map(([,i])=>i)};
-const essayFiltHTML=()=>{const kinds={};TOPICS.forEach(t=>kinds[t.kind]=(kinds[t.kind]||0)+1);const ks=Object.keys(kinds);
- const chip=(attr,v,l,on)=>`<button class="segb" ${attr}="${esc(v)}" aria-pressed="${on}">${esc(l)}</button>`;
- let h=ks.length>1?`<div class="filt" role="group" aria-label="Вид текст">${chip("data-ek","",`Всички · ${TOPICS.length}`,!efilt.kind)}${ks.map(k=>chip("data-ek",k,`${k} · ${kinds[k]}`,efilt.kind===k)).join("")}</div>`:"";
- if(efilt.kind&&efilt.kind!=="Есе"){const au={};TOPICS.filter(t=>t.kind===efilt.kind).forEach(t=>{const a=authOf(t);au[a]=(au[a]||0)+1});const as=Object.keys(au);
-  if(as.length>1)h+=`<div class="filt sub" role="group" aria-label="Автор">${chip("data-ea","","Всички автори",!efilt.author)}${as.map(a=>chip("data-ea",a,`${a} · ${au[a]}`,efilt.author===a)).join("")}</div>`}
- return h};
 const practice=(m,cat)=>{filt[m]=cat;store.set("f"+m,cat);if(m==="bel")qi=0;else ci=0;go(m)};
 const $=s=>document.querySelector(s), view=$("#view");
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -372,7 +290,7 @@ V.home=()=>{view.innerHTML=`
   <div><span class="l">M</span><span class="t">Математика</span><span class="d">ДДС, амортизация, проценти, статистика на резултатите.</span></div>
  </div></section>
  <div class="starts">
-  ${[["bel","Тест по БЕЛ",BEL.length+" задачи · правопис, пунктуация, литература"],["essay","Аргументативен текст","Маркиране на структурата, показатели, AI обратна връзка"],["acc","Счетоводни казуси",CASES.length+" казуса · двойно записване, ДДС"],["progress","Моят прогрес","Точност по модули и теми"],...(EDITOR&&!OFFLINE?[["teacher",W("Материали · за учителя","Материали"),W("Качване от Excel и редакция на задачите","Зареди материали от Excel файл на учителя")]]:[])]
+  ${[...(TESTS.length?[["tests","Тестове от учителя",`${TESTS.length} ${TESTS.length===1?"тест":"теста"} · резултат в края`]]:[]),["bel","Тест по БЕЛ",BEL.length+" задачи · правопис, пунктуация, литература"],["acc","Счетоводни казуси",CASES.length+" казуса · двойно записване, ДДС"],["progress","Моят прогрес","Точност по модули и теми"],...(EDITOR&&!OFFLINE?[["teacher",W("Материали · за учителя","Материали"),W("Качване от Excel и редакция на задачите","Зареди материали от Excel файл на учителя")]]:[])]
    .map(([v,t,s])=>`<button class="start" data-go="${v}"><span><strong>${t}</strong><small>${s}</small></span><span class="go">→</span></button>`).join("")}
  </div>
 `;
@@ -424,204 +342,6 @@ ${ta.value.slice(0,4000)}
    view.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add("ok")});
    if(i!==q.a)b.classList.add("no");done(i===q.a)});};
 
-V.essay=()=>{const EL=essayList();if(!EL.includes(essayTopic))essayTopic=EL[0]??0;const T=TOPICS[essayTopic],IS=T.kind!=="Есе",draft=store.get("draft"+tk(),"");view.innerHTML=`
- <div class="qhead"><div class="stack"><p class="eyebrow">Аргументативен текст</p><h1>Избери тема и пиши</h1></div>${editBtn("topics",essayTopic)}</div>
- ${essayFiltHTML()}<div class="topics">${EL.map(i=>{const t=TOPICS[i];return `<button class="topic" data-i="${i}" aria-pressed="${i===essayTopic}"><small>${t.kind}${t.author?" · "+esc(t.author):""}</small>${esc(t.t)}</button>`}).join("")}</div>
- <section class="panel"><label for="txt" class="eyebrow">Чернова · абзаците се отделят с празен ред</label>
- <textarea id="txt" placeholder="Увод с теза…">${esc(draft)}</textarea>
- <div class="row" style="justify-content:space-between"><span class="counter" id="cnt"></span><span class="counter">пази се на това устройство</span></div></section>
-
- <section class="panel"><div class="qhead"><h2>1. Маркирай структурата</h2><span class="pill">Самопроверка</span></div>
- <p class="muted" style="font-size:13.5px">${IS?"Отбележи ролята на всеки абзац. За всеки аргумент провери дали стъпва на текста на творбата и дали го тълкува, а не преразказва.":"Отбележи ролята на всеки абзац. Ако не можеш да намериш теза, аргумент или пример, значи ги няма в текста."}</p>
- <label class="stack" style="gap:4px"><span class="eyebrow">Тезата ми в едно изречение</span><input type="text" id="thesis" value="${esc(store.get("thesis"+tk(),""))}" placeholder="${IS?"В „…“ авторът представя … като …":"Свободата е отговорност, защото…"}"></label>
- <div class="stack" id="paras"></div><div id="sreport"></div></section>
-
- ${IS?`<section class="panel"><div class="qhead"><h2>Проверка за интерпретативно съчинение</h2><span class="pill">ИС</span></div>
- <div id="isauto" class="stack"></div>
- <h2 style="margin-top:4px">Отговори честно</h2>
- <div class="checks">${ISQ.map((q,i)=>`<label><input type="checkbox" id="isq${i}"${(store.get("isq"+tk(),[]))[i]?" checked":""}> <span><strong>${q[0]}</strong><br><span class="muted" style="font-size:13px">${q[1]}</span></span></label>`).join("")}</div>
- <div id="isrep"></div></section>`:""}
- <section class="panel"><h2>2. Показатели на текста</h2><div id="metrics" class="stack"></div></section>
-
- <section class="panel"><div class="qhead"><h2>3. AI обратна връзка</h2><span class="pill">Насока, не оценка</span></div>
- <p class="muted" style="font-size:13.5px">Claude прочита текста и коментира всеки критерий. Оценката остава за учителя.</p>
- <div class="row"><button class="btn" id="ai">Провери текста</button><button class="btn ghost" id="aistop" hidden>Спри</button></div>
- <div id="aiout" class="stack"></div></section>
-
- <section class="panel"><div class="qhead"><h2>4. Образец с коментари</h2><span class="pill">Сравнение</span></div>
- ${SAMPLE_BY[T.t]?`<details id="smpl"><summary>Покажи образеца (по-добре след като напишеш своя текст)</summary>
-  <div class="stack" style="margin-top:12px">
-   <p class="note">Съкратен образец за ориентир. Тезата е подчертана, най-силният абзац е отбелязан, а под всеки абзац има коментар.</p>
-   <div class="stack" id="sparas"></div>
-   <div class="fb"><strong>Какво носи точки в този текст</strong><ul class="rep">${SAMPLE_BY[T.t].why.map(w=>`<li class="g">${esc(w)}</li>`).join("")}</ul></div>
-   <h2>Твоят текст и образецът</h2><div class="tacc" id="cmp"></div>
-  </div></details>`:`<p class="muted" style="font-size:13.5px">За тази тема още няма образец.</p>`}</section>
-
- <section class="panel"><div class="qhead"><h2>5. Предай на учителя</h2><span class="pill">Google Classroom</span></div>
- <label class="stack" style="gap:4px"><span class="eyebrow">Име и клас</span><input type="text" id="sname" value="${esc(store.get("sname",""))}" placeholder="Мария Иванова, 12 б"></label>
- ${OFFLINE?`<ol class="steps"><li>Натисни „Изпрати PDF“ и избери <strong>Classroom</strong> от списъка.</li><li>Избери класа и заданието, после „Предаване“.</li></ol><p class="muted" style="font-size:13px">Ако Classroom не се появи в списъка, файлът се запазва на телефона. Тогава го прикачи в заданието чрез „Добавяне или създаване“ → „Файл“.</p>`:`<ol class="steps"><li>Натисни „Копирай и отвори Classroom“.</li><li>Отвори заданието от учителя.</li><li>Постави текста в документ или прикачи PDF файла чрез „Добавяне или създаване“ → „Файл“.</li><li>Натисни „Предаване“.</li></ol>`}
- <div class="row"><a class="btn" id="cls" href="https://classroom.google.com/" target="_blank" rel="noopener">Копирай и отвори Classroom</a><button class="btn ghost" id="dl" hidden>${OFFLINE?"Изпрати PDF":"Запази като PDF"}</button></div>
- <p id="sfb" class="muted" style="font-size:13px"></p>
- <textarea id="sub" readonly hidden aria-label="Текст за предаване" style="min-height:160px"></textarea></section>
-
- <div class="row"><button class="btn ghost" id="fin">Отбележи като завършено</button><span id="efb" class="muted" style="font-size:13px"></span></div>`;
-
- const ROLES=[["","— роля —"],["intro","Увод с теза"],["arg","Аргумент"],["concl","Извод"],["other","Друго"]];
- const getParas=()=>$("#txt").value.split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);
- let tags=store.get("tags"+tk(),[]);
- const renderParas=()=>{if(!$("#txt"))return;const ps=getParas();
-  $("#paras").innerHTML=ps.length?ps.map((p,i)=>{const t=tags[i]||{};return `<div class="para ${t.role?"r-"+t.role:""}">
-   <p class="ptext">${esc(p.length>140?p.slice(0,140)+"…":p)}</p>
-   <div class="row"><select id="role${i}" aria-label="Роля на абзац ${i+1}">${ROLES.map(([v,l])=>`<option value="${v}"${t.role===v?" selected":""}>${l}</option>`).join("")}</select>
-   ${t.role==="arg"?`<label class="chk"><input type="checkbox" id="ex${i}"${t.ex?" checked":""}> ${IS?"стъпва на текста":"има пример"}</label>${IS?`<label class="chk"><input type="checkbox" id="in${i}"${t.inp?" checked":""}> тълкува, не преразказва</label>`:""}`:""}</div></div>`}).join("")
-   :`<p class="muted">Напиши поне един абзац — тук ще се появят абзаците за маркиране.</p>`;
-  ps.forEach((_,i)=>{$("#role"+i).onchange=e=>{tags[i]={...(tags[i]||{}),role:e.target.value};store.set("tags"+tk(),tags);renderParas()};
-   const ex=$("#ex"+i);if(ex)ex.onchange=e=>{tags[i]={...tags[i],ex:e.target.checked};store.set("tags"+tk(),tags);report()};
-   const ip=$("#in"+i);if(ip)ip.onchange=e=>{tags[i]={...tags[i],inp:e.target.checked};store.set("tags"+tk(),tags);report()}});
-  report()};
- const report=()=>{const n=getParas().length,ts=tags.slice(0,n),args=ts.filter(t=>t&&t.role==="arg");
-  const items=[
-   [!!$("#thesis").value.trim(),"Тезата е формулирана в едно изречение"],
-   [ts.some(t=>t&&t.role==="intro"),"Има увод с теза"],
-   [args.length>=2,`Поне два аргумента (сега: ${args.length})`],
-   [args.length>0&&args.every(t=>t.ex),(IS?"Всеки аргумент стъпва на текста":"Всеки аргумент има пример")+(args.length?` (${args.filter(t=>t.ex).length} от ${args.length})`:"")],
-   ...(IS?[[args.length>0&&args.every(t=>t.inp),"Всеки аргумент тълкува"+(args.length?` (${args.filter(t=>t.inp).length} от ${args.length})`:"")]]:[]),
-   [ts.some(t=>t&&t.role==="concl"),"Има извод"]];
-  const ok=items.filter(i=>i[0]).length;
-  $("#sreport").innerHTML=`<div class="fb ${ok===items.length?"ok":""}"><strong>${ok} от ${items.length} изпълнени</strong><ul class="rep">${items.map(([g,l])=>`<li class="${g?"g":"b"}">${l}</li>`).join("")}</ul></div>`};
-
- const STOP=new Set("които която който което защото когато където между много може трябва неговата нейната своята своите този тази това тези".split(" "));
- const CONN=["освен това","от друга страна","следователно","затова","например","на първо място","на второ място","в заключение","въпреки","обаче","тоест","не на последно място","поради това","от една страна"];
- const metrics=()=>{const t=$("#txt").value,low=t.toLowerCase();
-  const sents=(t.match(/[^.!?…]+[.!?…]+/g)||[]).map(s=>s.trim());
-  const longS=sents.filter(s=>(s.match(/\S+/g)||[]).length>30);
-  const freq={};(low.match(/\p{L}+/gu)||[]).forEach(w=>{if(w.length>=5&&!STOP.has(w))freq[w]=(freq[w]||0)+1});
-  const rep=Object.entries(freq).filter(([,c])=>c>=4).sort((a,b)=>b[1]-a[1]).slice(0,5);
-  const conn=CONN.filter(c=>low.includes(c));
-  const m=(good,title,detail)=>`<div class="metric ${good?"g":"b"}"><strong>${title}</strong><span>${detail}</span></div>`;
-  if(IS)isAuto(t,low,sents,m);
-  $("#metrics").innerHTML=!t.trim()?`<p class="muted">Показателите се изчисляват, докато пишеш.</p>`:
-   m(!longS.length,`Дълги изречения: ${longS.length}`,longS.length?"Над 30 думи: „"+esc(longS[0].slice(0,70))+"…“ — раздели го.":"Няма изречения над 30 думи.")+
-   m(!rep.length,`Повтарящи се думи: ${rep.length}`,rep.length?rep.map(([w,c])=>`${esc(w)} ×${c}`).join(", ")+" — потърси синоним.":"Няма думи, повторени 4 и повече пъти.")+
-   m(conn.length>=3,`Свързващи изрази: ${conn.length}`,conn.length?conn.join(", ")+(conn.length<3?". Добави още между абзаците.":"."):"Няма. Свържи абзаците с „освен това“, „от друга страна“, „следователно“.")};
-
- const TERMS=["лирическ","мотив","образ","символ","контраст","метафор","епитет","сравнени","композици","заглавие","повторени","антитез","внушени","художествен","рефрен","строф","анафор","олицетвор"];
- const INTERP=["показва","внушава","подчертава","разкрива","символизира","означава","по този начин","чрез","така се","това е знак"];
- const NARR=["след това","после","тогава","накрая","изведнъж","по-късно"];
- const isAuto=(t,low,sents,m)=>{const el=$("#isauto");if(!t.trim()){el.innerHTML=`<p class="muted">Автоматичната проверка започва, когато пишеш.</p>`;return}
-  const quotes=(t.match(/[„"“«]([^„"“”»]{2,})[“"”»]/g)||[]).map(q=>q.slice(1,-1)).filter(q=>!T.t.includes(q));
-  const longQ=quotes.filter(q=>(q.match(/\S+/g)||[]).length>15);
-  const terms=TERMS.filter(x=>low.includes(x)),interp=INTERP.filter(x=>low.includes(x));
-  const narr=sents.filter(s=>NARR.some(n=>s.toLowerCase().startsWith(n)));
-  const aut=!T.author||low.includes(T.author.toLowerCase()),wrk=!T.work||low.includes(T.work.toLowerCase());
-  el.innerHTML=
-   m(aut&&wrk,"Автор и творба",aut&&wrk?"Авторът и творбата са назовани.":`Липсва ${!aut?"името на автора":""}${!aut&&!wrk?" и ":""}${!wrk?"заглавието на творбата":""}. Назови ги в увода.`)+
-   m(quotes.length>=2&&!longQ.length,`Цитати: ${quotes.length}`,quotes.length<2?"Използвай поне 2 кратки цитата от творбата като опора.":longQ.length?`${longQ.length} цитат(а) над 15 думи — съкрати ги до ключовите думи.`:"Цитатите са кратки.")+
-   m(interp.length>=3,`Тълкуващи изрази: ${interp.length}`,interp.length?interp.join(", ")+(interp.length<3?". Добави тълкуване след цитатите.":"."):"Няма. След цитат пиши „това показва, че…“, „така се внушава…“.")+
-   m(terms.length>=3,`Литературни термини: ${terms.length}`,terms.length?terms.map(x=>x+"…").join(", ")+(terms.length<3?". Използвай още (образ, мотив, контраст, символ).":"."):"Няма. Назовавай образи, мотиви, художествени средства.")+
-   m(!narr.length,`Риск от преразказ: ${narr.length}`,narr.length?`Изречения, започващи като разказ: „${esc(narr[0].slice(0,60))}…“. Замени хронологията с тълкуване.`:"Няма изречения, които звучат като преразказ.")};
- const isReport=()=>{if(!IS)return;const v=ISQ.map((_,i)=>$("#isq"+i).checked);store.set("isq"+tk(),v);const n=v.filter(Boolean).length;
-  $("#isrep").innerHTML=`<div class="fb ${n===ISQ.length?"ok":""}"><strong>${n} от ${ISQ.length}</strong>${n===ISQ.length?"Съчинението отговаря на изискванията за ИС. Пусни AI проверката за втори поглед.":"Неотметнатите въпроси показват какво да поправиш."}</div>`};
- if(IS){ISQ.forEach((_,i)=>$("#isq"+i).onchange=isReport);isReport()}
- const upd=()=>{const t=$("#txt").value,w=(t.match(/\S+/g)||[]).length;
-  $("#cnt").textContent=`${w} думи · ${getParas().length} абзаца`;store.set("draft"+tk(),t);metrics()};
- let pt;$("#txt").oninput=()=>{upd();clearTimeout(pt);pt=setTimeout(renderParas,600)};
- $("#thesis").oninput=e=>{store.set("thesis"+tk(),e.target.value);report()};
- upd();renderParas();
- view.querySelectorAll(".topic").forEach(b=>b.onclick=()=>{essayTopic=+b.dataset.i;V.essay()});wireEdit();
- view.querySelectorAll("[data-ek]").forEach(b=>b.onclick=()=>{efilt.kind=b.dataset.ek;efilt.author="";store.set("fekind",efilt.kind);store.set("feauth","");V.essay()});
- view.querySelectorAll("[data-ea]").forEach(b=>b.onclick=()=>{efilt.author=b.dataset.ea;store.set("feauth",efilt.author);V.essay()});
- view.querySelectorAll(".filt").forEach(f=>{const a=f.querySelector('[aria-pressed="true"]');if(a&&(a.dataset.ek||a.dataset.ea))f.scrollLeft=Math.max(0,a.offsetLeft-f.offsetLeft-(f.clientWidth-a.offsetWidth)/2)});
-
- /* AI обратна връзка */
- let ctl;const aiBtn=$("#ai"),stop=$("#aistop"),out=$("#aiout");
- useCap("sample").then(s=>{if(!s){aiBtn.disabled=true;out.innerHTML=`<p class="muted">${OFFLINE?"AI проверката работи само в онлайн версията в claude.ai.":"AI проверката не е достъпна в този изглед."}</p>`;return}
-  stop.onclick=()=>ctl?.abort();
-  aiBtn.onclick=async()=>{const text=$("#txt").value.trim();
-   if((text.match(/\S+/g)||[]).length<80){out.innerHTML=`<p class="muted">Напиши поне 80 думи, за да има какво да се провери.</p>`;return}
-   ctl=new AbortController();aiBtn.disabled=true;stop.hidden=false;out.innerHTML=`<p class="muted">Claude чете текста… (обикновено 20–60 секунди)</p>`;
-   const prompt=`Ти си учител по български език и литература и проверяваш ${T.kind.toLowerCase()} на ученик от 12 клас, който се подготвя за ДЗИ.
-Тема: „${T.t}“
-Тезата според ученика: „${$("#thesis").value.trim()||"не е посочена"}“
-
-${IS?`Това е интерпретативно съчинение: опората трябва да е текстът на творбата, а не личен опит. Не цитирай творбата в отговора си.
-Дай кратка, конкретна обратна връзка на български по тези критерии: Теза (назовава автора, творбата и аспекта от темата), Опора на текста (образи, мотиви, художествени средства, кратки цитати), Тълкуване (интерпретира ли или преразказва), Литературна терминология, Композиция, Извод, Езикова правилност.`:"Дай кратка, конкретна обратна връзка на български по тези критерии: Теза, Аргументация, Примери, Композиция, Извод, Езикова правилност."}
-За всеки критерий: status "ok" (изпълнен), "partial" (частично) или "missing" (липсва) и comment — едно-две изречения, които сочат конкретно място в текста и казват какво да се подобри. Не поставяй оценка или точки. Не пренаписвай текста вместо ученика.
-Отговори само с JSON във формат:
-{"criteria":[{"name":"Теза","status":"ok","comment":"…"}],"strength":"най-силната страна, едно изречение","next":"една конкретна стъпка за подобрение"}
-
-Текстът на ученика:
-"""
-${text.slice(0,12000)}
-"""`;
-   try{const r=await s.json(prompt,{signal:ctl.signal,cache:false});
-    const crit=Array.isArray(r?.criteria)?r.criteria:[];
-    const lab={ok:["g","Изпълнен"],partial:["w","Частично"],missing:["b","Липсва"]};
-    out.innerHTML=crit.map(c=>{const [cl,l]=lab[c.status]||lab.partial;return `<div class="metric ${cl}"><strong>${esc(c.name||"")} · ${l}</strong><span>${esc(c.comment||"")}</span></div>`}).join("")+
-     (r?.strength?`<div class="fb ok"><strong>Силна страна</strong>${esc(r.strength)}</div>`:"")+
-     (r?.next?`<div class="fb"><strong>Следваща стъпка</strong>${esc(r.next)}</div>`:"");
-   }catch(e){const msg={cancelled:"Проверката е спряна.",not_granted:"Не е разрешено използването на Claude за тази страница.",sampling_disabled:"Claude не е достъпен за този акаунт.",rate_limited:"Твърде много проверки. Опитай пак след малко.",invalid_json:"Отговорът не можа да се прочете. Опитай пак.",session_expired:"Влез отново в акаунта си."}[e?.code]||"Проверката не успя. Опитай пак.";
-    out.innerHTML=`<p class="muted">${msg}</p>`;if(["not_granted","sampling_disabled"].includes(e?.code))aiBtn.hidden=true;}
-   finally{aiBtn.disabled=false;stop.hidden=true}}});
-
- /* образец */
- const S=SAMPLE_BY[T.t],RL={intro:"Увод с теза",arg:"Аргумент",concl:"Извод"};
- if(S)$("#sparas").innerHTML=S.paras.map(p=>{let t=esc(p.text);if(p.thesis)t=t.replace(esc(p.thesis),`<mark>${esc(p.thesis)}</mark>`);
-  return `<div class="para r-${p.role}"><div class="row" style="gap:6px"><span class="pill">${RL[p.role]}</span>${p.strong?`<span class="pill led">Най-силен абзац</span>`:""}</div>
-   <p class="stext">${t}</p>${p.ex?`<p class="sex">Пример: ${esc(p.ex)}</p>`:""}<p class="snote">${esc(p.note)}</p></div>`}).join("");
- const wc=t=>(t.match(/\S+/g)||[]).length,cc=t=>CONN.filter(c=>t.toLowerCase().includes(c)).length;
- const compare=()=>{const t=$("#txt").value,ps=getParas(),ts=tags.slice(0,ps.length),args=ts.filter(x=>x&&x.role==="arg");
-  const st=S.paras.map(p=>p.text).join("\n\n"),sa=S.paras.filter(p=>p.role==="arg");
-  const rows=[["Думи",wc(t),wc(st)],["Абзаци",ps.length,S.paras.length],["Аргументи",args.length,sa.length],[IS?"Аргументи с опора на текста":"Аргументи с пример",args.filter(x=>x.ex).length,sa.filter(p=>p.ex).length],["Свързващи изрази",cc(t),cc(st)],["Теза в едно изречение",$("#thesis").value.trim()?"да":"не","да"]];
-  $("#cmp").innerHTML=`<table><tr><th>Показател</th><th style="text-align:right">Ти</th><th style="text-align:right">Образец</th></tr>${rows.map(([l,a,b])=>`<tr><td style="font-family:var(--f-body)">${l}</td><td class="n${typeof a==="number"&&a<b?" lo":""}">${a}</td><td class="n">${b}</td></tr>`).join("")}</table>`};
- if(S)$("#smpl").ontoggle=()=>{if($("#smpl").open)compare()};
-
- /* предаване */
- $("#sname").oninput=e=>store.set("sname",e.target.value);
- const subText=()=>{const ps=getParas(),ts=tags.slice(0,ps.length),args=ts.filter(x=>x&&x.role==="arg");
-  return `${$("#sname").value.trim()||"[име и клас]"}
-${T.kind}: ${T.t}
-Дата: ${new Date().toLocaleDateString("bg-BG")} · ${wc($("#txt").value)} думи · ${ps.length} абзаца
-Теза: ${$("#thesis").value.trim()||"не е посочена"}
-Самопроверка: аргументи ${args.length}, ${IS?"с опора на текста":"с пример"} ${args.filter(x=>x.ex).length}, увод ${ts.some(x=>x&&x.role==="intro")?"да":"не"}, извод ${ts.some(x=>x&&x.role==="concl")?"да":"не"}
-
-${ps.join("\n\n")}
-`};
- $("#cls").onclick=e=>{if(wc($("#txt").value)<20){e.preventDefault();$("#sfb").textContent="Напиши текста преди да го предадеш.";return}
-  const txt=subText(),box=$("#sub");box.value=txt;
-  const fallback=()=>{box.hidden=false;box.focus();box.select();$("#sfb").textContent="Копирането не е позволено тук. Текстът е маркиран — копирай го ръчно и го постави в Classroom."};
-  try{navigator.clipboard.writeText(txt).then(()=>{box.hidden=true;$("#sfb").textContent="Текстът е копиран. Постави го в заданието в Classroom."},fallback)}catch(err){fallback()}};
- /* PDF за предаване */
- const loadPdf=()=>window.__pdfP||(window.__pdfP=new Promise((ok,no)=>{const add=src=>new Promise((r,j)=>{const sc=document.createElement("script");sc.src=src;sc.onload=r;sc.onerror=j;document.head.appendChild(sc)});
-  add("vendor/pdfmake.min.js").then(()=>add("vendor/vfs_fonts.js")).then(()=>window.pdfMake?ok(window.pdfMake):no()).catch(()=>{window.__pdfP=null;no()})}));
- const buildPdf=pm=>{const ps=getParas(),ts=tags.slice(0,ps.length),args=ts.filter(x=>x&&x.role==="arg"),yn=v=>v?"да":"не";
-  const self=[["Аргументи",String(args.length)],[IS?"С опора на текста":"С пример",String(args.filter(x=>x.ex).length)],["Увод с теза",yn(ts.some(x=>x&&x.role==="intro"))],["Извод",yn(ts.some(x=>x&&x.role==="concl"))]];
-  if(IS)self.splice(2,0,["Тълкуват",String(args.filter(x=>x.inp).length)]);
-  const dd={pageSize:"A4",pageMargins:[60,60,60,60],info:{title:`${T.kind}: ${T.t}`,author:$("#sname").value.trim()||"Ученик"},
-   defaultStyle:{font:"Roboto",fontSize:11.5,lineHeight:1.35,color:"#18233D"},
-   footer:(cur,tot)=>({text:`МатураЛаб · ${cur} / ${tot}`,alignment:"center",fontSize:8,color:"#5B6782",margin:[0,20,0,0]}),
-   content:[
-    {text:$("#sname").value.trim()||"[име и клас]",fontSize:10,color:"#5B6782"},
-    {text:T.kind.toUpperCase(),fontSize:9,bold:true,color:"#2F5BD3",margin:[0,14,0,2],characterSpacing:1},
-    {text:T.t,fontSize:16,bold:true,margin:[0,0,0,6]},
-    {text:`${new Date().toLocaleDateString("bg-BG")} · ${wc($("#txt").value)} думи · ${ps.length} абзаца`,fontSize:9,color:"#5B6782",margin:[0,0,0,14]},
-    {table:{widths:["*"],body:[[{stack:[{text:"Теза",bold:true,fontSize:9,color:"#2F5BD3"},{text:$("#thesis").value.trim()||"не е посочена",margin:[0,2,0,8]},
-      {text:"Самопроверка",bold:true,fontSize:9,color:"#2F5BD3"},{text:self.map(([k,v])=>`${k}: ${v}`).join("   ·   "),fontSize:10}],margin:[8,8,8,8]}]]},
-     layout:{hLineColor:()=>"#D9E0EB",vLineColor:()=>"#D9E0EB"},margin:[0,0,0,20]},
-    ...ps.map(p=>({text:p,alignment:"justify",margin:[0,0,0,10],leadingIndent:20}))]};
-  return new Promise(r=>pm.createPdf(dd).getBlob(r))};
- useCap("downloads").then(d=>{if(!d)return;const b=$("#dl");b.hidden=false;
-  b.onclick=async()=>{if(wc($("#txt").value)<20){$("#sfb").textContent="Напиши текста преди да го запазиш.";return}
-   const nm=($("#sname").value.trim()||"есе").replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,""),base=`${nm}-${IS?"съчинение":"есе"}`;
-   b.disabled=true;$("#sfb").textContent="Подготвям PDF…";
-   let file;try{file={filename:base+".pdf",data:await buildPdf(await loadPdf())}}
-   catch(e){file={filename:base+".txt",data:subText()}}
-   try{const st=await (OFFLINE?offSave({...file,share:true}):d.save(file));if(st&&st.status==="shared"){$("#sfb").textContent="Файлът е изпратен. Ако си избрал Classroom, отвори заданието и натисни „Предаване“.";return}$("#sfb").textContent=file.filename.endsWith(".pdf")?"PDF файлът е запазен. Прикачи го към заданието в Classroom.":"PDF не можа да се създаде, затова е запазен текстов файл. Прикачи го към заданието."}
-   catch(err){$("#sfb").textContent=err?.code==="cancelled"||err?.code==="declined"?"Запазването е отказано.":"Файлът не можа да се запази. Използвай копирането."}
-   finally{b.disabled=false}}});
-
- $("#fin").onclick=()=>{if(stats.demo){stats=EMPTY()}stats.essays++;store.set("stats",stats);$("#efb").textContent="Записано в прогреса."};};
-
 V.acc=()=>{const L=listOf("acc");if(ci>=L.length)ci=0;const idx=L[ci],c=CASES[idx],T=c.type||"entries";const opts=accOptions();
  view.innerHTML=`
  ${filtHTML("acc")}
@@ -670,7 +390,7 @@ V.progress=()=>{const pct=m=>m.t?Math.round(m.c/m.t*100):0;
  <div class="stack"><p class="eyebrow">Моят прогрес${stats.demo?" · примерни данни":""}</p><h1>Данните показват къде да учиш</h1></div>
  <div class="stats"><div class="stat"><div class="v">${pct(stats.bel)}%</div><div class="k">БЕЛ тест (${stats.bel.c}/${stats.bel.t})</div></div>
   <div class="stat"><div class="v">${pct(stats.acc)}%</div><div class="k">Казуси (${stats.acc.c}/${stats.acc.t})</div></div>
-  <div class="stat"><div class="v">${stats.essays}</div><div class="k">Завършени текста</div></div></div>
+  <div class="stat"><div class="v">${TESTS.filter(t=>tres(t.id)).length}</div><div class="k">Решени тестове</div></div></div>
  <section class="panel"><h2>Точност по теми в БЕЛ</h2>
   ${tp.length?`<div style="overflow-x:auto"><svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:${W*1.4}px" role="img" aria-label="Точност по теми">${bars}</svg></div>`:`<p class="muted">Реши няколко задачи от теста — тук ще се появи разбивка по теми.</p>`}
   ${weak.length?`<p class="note">Хипотеза за следващата сесия: слабите теми са <strong>${weak.map(esc).join(", ")}</strong>. Реши ги отново и сравни резултата.</p>
@@ -682,14 +402,13 @@ V.progress=()=>{const pct=m=>m.t?Math.round(m.c/m.t*100):0;
   else{e.target.dataset.sure=1;e.target.textContent="Натисни пак за потвърждение"}};};
 
 /* ---------- съдържание: примерно по подразбиране, учителско от хранилището ---------- */
-const DEF=JSON.parse(JSON.stringify({bel:BEL,topics:TOPICS,cases:CASES,acc:ACC}));
-const SAMPLE_BY=Object.fromEntries(TOPICS.map((t,i)=>[t.t,SAMPLES[i]]));
-const MODS=[["bel","БЕЛ въпроси"],["topics","Теми за есе"],["cases","Казуси"],["acc","Сметки"]];
-const getM=m=>({bel:BEL,topics:TOPICS,cases:CASES,acc:ACC})[m];
-const putM=(m,v)=>{if(m==="bel")BEL=v;else if(m==="topics")TOPICS=v;else if(m==="cases")CASES=v;else ACC=v};
+let TESTS=[];
+const DEF=JSON.parse(JSON.stringify({bel:BEL,topics:TOPICS,cases:CASES,acc:ACC,tests:[]}));
+const MODS=[["bel","БЕЛ въпроси"],["cases","Казуси"],["acc","Сметки"]];
+const getM=m=>({bel:BEL,topics:TOPICS,cases:CASES,acc:ACC,tests:TESTS})[m];
+const putM=(m,v)=>{if(m==="tests")TESTS=v;else if(m==="bel")BEL=v;else if(m==="topics")TOPICS=v;else if(m==="cases")CASES=v;else ACC=v};
 let DB=null,EDITOR=false,curView="home",formOpen=false,editTarget=null,teacherTab="bel",fromTeacher={},updatedAt=null;
-const tk=()=>{let h=7;for(const ch of (TOPICS[essayTopic]?.t||""))h=(h*31+ch.codePointAt(0))>>>0;return "t"+h.toString(36)};
-const clampIdx=()=>{qi=Math.max(0,Math.min(qi,BEL.length-1));ci=Math.max(0,Math.min(ci,CASES.length-1));essayTopic=Math.max(0,Math.min(essayTopic,TOPICS.length-1))};
+const clampIdx=()=>{qi=Math.max(0,Math.min(qi,BEL.length-1));ci=Math.max(0,Math.min(ci,CASES.length-1))};
 const OFFLINE=!!window.MATURA_OFFLINE;
 let instPrompt=null;
 const isStandalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}};
@@ -704,7 +423,7 @@ const installHTML=()=>{if(isStandalone())return "";
   :`<li>Отвори менюто <strong>⋮</strong> горе вдясно.</li><li>Избери <strong>„Инсталиране на приложението“</strong> или <strong>„Добавяне към началния екран“</strong>.</li>`;
  return `<section class="panel inst"><h2>Инсталирай на телефона</h2><ol class="steps">${steps}</ol><p class="muted" style="font-size:13px">След това приложението се отваря от иконата и работи без интернет.</p></section>`};
 const wireInstall=()=>{const b=$("#instb");if(b)b.onclick=async()=>{const e=instPrompt;if(!e)return;instPrompt=null;e.prompt();try{await e.userChoice}catch(_){}V.home()}};
-const applyContent=j=>{if(j)for(const m of ["bel","topics","cases","acc"])if(j[m])DEF[m]=j[m]};
+const applyContent=j=>{if(j)for(const m of ["bel","topics","cases","acc","tests"])if(j[m])DEF[m]=j[m]};
 const contentReady=!OFFLINE?Promise.resolve():fetch("content.json").then(r=>{if(!r.ok)throw 0;return r.json()}).then(applyContent).catch(()=>applyContent(window.MATURA_CONTENT));
 const localDB=()=>{const subs=[],key="ml_content";const read=()=>{try{return JSON.parse(localStorage.getItem(key)||"{}")}catch(e){return {}}};
  const write=o=>{try{localStorage.setItem(key,JSON.stringify(o))}catch(e){throw {code:"quota_exceeded"}}};
@@ -776,13 +495,12 @@ const buildWB=X=>{const wb=X.utils.book_new(),add=(n,rows,w)=>{const ws=X.utils.
   ["• Теми: вид „Есе“ или „ИС“. За ИС автор (фамилия) и ключова дума от заглавието включват автоматичната проверка."],
   ["• От Google Таблици: Файл → Изтегляне → Microsoft Excel (.xlsx)."]],[110]);
  add("БЕЛ",[HEAD.bel,...BEL.map(toRow.bel)],[16,12,50,22,22,22,22,22,50,50,40,60,30]);
- add("Теми",[HEAD.topics,...TOPICS.map(toRow.topics)],[12,64,20,26]);
- add("Казуси",[HEAD.cases,...CASES.map(toRow.cases)],[24,60,14,32,14,60,50,24]);
+  add("Казуси",[HEAD.cases,...CASES.map(toRow.cases)],[24,60,14,32,14,60,50,24]);
  add("Сметки",[HEAD.acc,...accSorted().map(toRow.acc)],[10,60]);
  return X.write(wb,{bookType:"xlsx",type:"array"})};
 const parseWB=(X,buf)=>{const wb=X.read(buf,{type:"array"}),out={},errs=[],skipped=[];
  const rows=n=>{const ws=wb.Sheets[n];if(!ws)return null;return X.utils.sheet_to_json(ws,{header:1,defval:"",raw:false}).slice(1).map((r,i)=>({r:Array.from({length:13},(_,j)=>String(r[j]??"").trim()),n:i+2})).filter(x=>x.r.some(Boolean))};
- for(const m of ["acc","bel","topics","cases"]){const rs=rows(SHEET[m]);if(rs===null){skipped.push(SHEET[m]);continue}
+ for(const m of ["acc","bel","cases"]){const rs=rows(SHEET[m]);if(rs===null){skipped.push(SHEET[m]);continue}
   if(!rs.length){errs.push(`Лист „${SHEET[m]}“ е празен. Изтрий листа, ако не искаш да го променяш.`);continue}
   const items=[];for(const {r,n} of rs){const x=P[m](r,out.acc||ACC);if(x.err)errs.push(`${SHEET[m]}, ред ${n}: ${x.err}`);else items.push(x.item)}
   out[m]=m==="acc"?Object.fromEntries(items):items}
@@ -834,12 +552,13 @@ V.teacher=()=>{formOpen=false;
  view.innerHTML=`
  <div class="stack"><p class="eyebrow">${W("Режим учител","Материали на това устройство")}</p><h1>Материали</h1>
   <p class="muted" id="tstat">${tStatText(fromT)}</p>
-  <p class="counter" id="tcnt">${BEL.length} БЕЛ въпроса · ${TOPICS.length} теми · ${CASES.length} казуса · ${Object.keys(ACC).length} сметки</p></div>
+  <p class="counter" id="tcnt">${BEL.length} БЕЛ въпроса · ${CASES.length} казуса · ${Object.keys(ACC).length} сметки</p></div>
  ${DB?"":`<div class="fb no"><strong>Хранилището не е достъпно</strong>В този изглед промените не могат да се публикуват. Отвори приложението в claude.ai, влязъл в акаунта си.</div>`}
  ${OFFLINE?`<section class="panel"><h2>Качи от Excel</h2>
   <ol class="steps"><li>Изтегли шаблона. Той съдържа текущите материали.</li><li>Редактирай или добави редове в Excel или Google Таблици. Указанията са в първия лист.</li><li>${W("Качи файла, прегледай резултата и публикувай.","Зареди файла и прегледай резултата. Материалите остават само на това устройство.")}</li></ol>
   <div class="row"><button class="btn ghost" id="tpl" hidden>Изтегли шаблона</button><label class="btn" for="up" tabindex="0">${W("Качи файл","Зареди файл")}</label><input type="file" id="up" accept=".xlsx,.xls,.ods" hidden></div>
   <p id="xmsg" class="muted" style="font-size:13px"></p><div id="prev" class="stack"></div></section>`:""}
+ ${OFFLINE?"":`<div id="genwrap" class="stack">${genHTML()}</div>`}
  ${impHTML()}
  ${OFFLINE?"":`<section class="panel"><h2>Редактирай</h2>
   <div class="seg">${MODS.map(([m,l])=>`<button class="segb" data-t="${m}" aria-pressed="${m===teacherTab}">${l}</button>`).join("")}</div>
@@ -854,7 +573,7 @@ V.teacher=()=>{formOpen=false;
   try{const data=buildWB(await loadX());await d.save({filename:"maturalab-materiali.xlsx",data});$("#xmsg").textContent="Шаблонът е запазен."}
   catch(e){$("#xmsg").textContent=e?.code==="declined"?"Запазването е отказано.":"Шаблонът не можа да се създаде. Провери връзката и опитай пак."}finally{b.disabled=false}}});
  useCap("downloads").then(d=>{const b=$("#cjson");if(!d||!b)return;b.hidden=false;b.onclick=async()=>{b.disabled=true;
-  try{await d.save({filename:"content.json",data:JSON.stringify({bel:BEL,topics:TOPICS,cases:CASES,acc:ACC},null,1)});$("#cjmsg").textContent="Файлът е запазен."}
+  try{await d.save({filename:"content.json",data:JSON.stringify({bel:BEL,topics:TOPICS,cases:CASES,acc:ACC,tests:TESTS},null,1)});$("#cjmsg").textContent="Файлът е запазен."}
   catch(e){$("#cjmsg").textContent=e?.code==="declined"?"Запазването е отказано.":"Файлът не можа да се запази."}finally{b.disabled=false}}});
  if($("#up")){$("label[for=up]").onkeydown=e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();$("#up").click()}};
  $("#up").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;$("#xmsg").textContent="Чета файла…";$("#prev").innerHTML="";
@@ -873,7 +592,7 @@ V.teacher=()=>{formOpen=false;
     catch(err){pub.disabled=false;pub.textContent=W("Публикувай за учениците","Зареди на това устройство");$("#xmsg").textContent=err?.code==="quota_exceeded"?"Материалите са твърде много за едно публикуване. Раздели ги на по-малки файлове.":"Публикуването не успя. Провери връзката и опитай пак."}}}};}
  $("#rst").onclick=async e=>{const b=e.target;if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Натисни пак, за да потвърдиш";return}
   b.disabled=true;try{for(const m of ["bel","topics","cases","acc"])await DB.doc("content/"+m).delete();$("#rmsg2").textContent=W("Върнати са примерните материали.","Върнати са вградените материали.")}catch(err){b.disabled=false;$("#rmsg2").textContent="Не успя. Опитай пак."}};
- renderList();wireImp();
+ renderList();wireImp();wireGen();
  if(editTarget){const t=editTarget;editTarget=null;openForm(t.m,t.i)}};
 
 const renderList=()=>{if(!$("#elist"))return;const m=teacherTab,arr=m==="acc"?accSorted():getM(m);formOpen=false;
@@ -929,14 +648,14 @@ const AI_RULES=()=>`Ти помагаш на учител да прехвърл�
 - "topic" е кратка тема: Правопис, Пунктуация, Граматика, Морфология, Лексика, Литература, Четене с разбиране и др.
 - ВАЖНО: Когато счетоводен казус е списък от номерирани стопански операции (1., 2., 3. …) на едно предприятие, НЕ го връщай като един казус. Направи ОТДЕЛЕН казус за всяка операция: "title":"Оп. N. кратко описание" (напр. "Оп. 1. Покупка на материали"), "text" – условието на операцията дословно, а ако тя се позовава на друга операция ("сумата от оп. 1"), добави в скоби нужната сума, за да е разбираема самостоятелно; "entries" – само статиите на тази операция (с ДДС, себестойност и т.н.); "group" – името на предприятието (напр. "„Алфа“ ООД"). Общото условие (регистрация по ЗДДС, валута) добави в началото на "text" на първата операция.
 - Счетоводен казус със статии: "type":"entries", всяка статия {"d":"дебит","k":"кредит","amt":число}; ползвай Националния сметкоплан (напр. 302, 401, 4531, 503). Казус с числов отговор: "type":"num", "answer":число. Казус с таблица за попълване (баланс, отчет за приходите и разходите и др.): "type":"table", "rows":[{"label":"позиция","amt":число}]. Сумите са числа без валута.
-- Тема за есе или интерпретативно съчинение: в "topics", "kind":"Есе" или "ИС"; за ИС добави "author" (само фамилия) и "work" (ключова дума от заглавието).
+- Теми за есе и интерпретативно съчинение не се добавят в приложението – опиши ги кратко в "skipped".
 - В "skipped" сложи само съдържание, което не е задача от горните видове, като {"what":"кратко описание","text":"пълният текст на задачата, ако е задача"}. Указания, точкуване и заглавия не са задачи.
 - "fromKey": true само ако верният отговор (или примерният отговор и критериите) е посочен в PDF файла. Иначе реши задачата сам, "fromKey": false.
 - "exp": едно-две изречения обяснение защо отговорът е верен, на български.
 - Нужните сметки, които не са в списъка по-долу, добави в "accounts".
 Сметки в приложението: ${Object.entries(ACC).map(([k,v])=>k+" "+v).join("; ")}
 Отговори само с JSON:
-{"bel":[{"topic":"","type":"choice","q":"","opts":["",""],"answer":"А","exp":"","passage":"","fromKey":true},{"topic":"","type":"open","q":"","model":"","criteria":[""],"fromKey":false}],"cases":[{"title":"","text":"","type":"entries","entries":[{"d":"","k":"","amt":0}],"exp":"","group":"","fromKey":true},{"title":"","text":"","type":"table","rows":[{"label":"","amt":0}],"exp":"","fromKey":true}],"topics":[{"kind":"Есе","t":""}],"accounts":[{"k":"","name":""}],"skipped":[{"what":"","text":""}]}
+{"bel":[{"topic":"","type":"choice","q":"","opts":["",""],"answer":"А","exp":"","passage":"","fromKey":true},{"topic":"","type":"open","q":"","model":"","criteria":[""],"fromKey":false}],"cases":[{"title":"","text":"","type":"entries","entries":[{"d":"","k":"","amt":0}],"exp":"","group":"","fromKey":true},{"title":"","text":"","type":"table","rows":[{"label":"","amt":0}],"exp":"","fromKey":true}],"topics":[],"accounts":[{"k":"","name":""}],"skipped":[{"what":"","text":""}]}
 Празните групи остави като [].`;
 
 const aiToRow={bel:x=>{const t=x.type==="text"?"кратък":x.type==="open"?"отворена":"избор";return [x.topic||"Общи",t,x.q||"",...[0,1,2,3].map(i=>t==="избор"?((x.opts||[])[i]||""):""),t==="кратък"?(x.answers||[]).join("; "):t==="избор"?String(x.answer||""):"",x.exp||"",t==="отворена"?(x.model||""):"",t==="отворена"?(x.criteria||[]).join("; "):"",x.passage||"",x.ref||""]},
@@ -1028,17 +747,169 @@ const impForm=i=>{const x=IMP.items[i],row=$("#ir"+i);const fs=$("#fslot");if(fs
   if(p.err){const e=$("#ferr");e.hidden=false;e.textContent="Поправи: "+p.err;return}
   Object.assign(x,{row:r,item:p.item,err:null,check:false,on:true});formOpen=false;renderImp()}};
 
+/* ---------- тестове: генериране (учител) и решаване (ученик) ---------- */
+const LTR="АБВГДЕ";
+const loadPdfMake=()=>window.__pdfP||(window.__pdfP=new Promise((ok,no)=>{const add=src=>new Promise((r,j)=>{const sc=document.createElement("script");sc.src=src;sc.onload=r;sc.onerror=j;document.head.appendChild(sc)});
+ add("vendor/pdfmake.min.js").then(()=>add("vendor/vfs_fonts.js")).then(()=>window.pdfMake?ok(window.pdfMake):no()).catch(()=>{window.__pdfP=null;no()})}));
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const catsOf=m=>{const arr=m==="bel"?BEL:CASES,c={};arr.forEach(x=>{const k=catOf[m](x);c[k]=(c[k]||0)+1});return Object.entries(c)};
+const tCount=t=>(t.bel||[]).length+(t.cases||[]).length;
+const tDate=ts=>new Date(ts).toLocaleDateString("bg-BG");
+let GEN=null; /* {name, bel:[{cat,item}], cases:[{cat,item}]} */
+let testOpen=null;
+
+/* --- генератор --- */
+const genHTML=()=>{const row=(m,[c,n],i)=>`<tr><td style="font-family:var(--f-body)">${esc(c)}</td><td class="n">${n}</td><td class="n"><input type="number" class="gn" id="g${m}${i}" data-m="${m}" data-c="${esc(c)}" min="0" max="${n}" value="0" inputmode="numeric" aria-label="Брой въпроси: ${esc(c)}"></td></tr>`;
+ return `<section class="panel" id="gen"><div class="qhead"><h2>Генерирай тест</h2><span class="pill">Случаен избор</span></div>
+ <p class="muted" style="font-size:13.5px">Задай колко въпроса да се изберат от всяка категория. Въпросите се избират случайно от материалите.</p>
+ <label class="fl">Име на теста<input type="text" id="gname" value="Тест ${tDate(Date.now())}"></label>
+ <h3 class="eyebrow" style="margin:6px 0 0">БЕЛ</h3>
+ <div class="tacc"><table class="gtab"><tr><th>Категория</th><th style="text-align:right">Налични</th><th style="text-align:right">Брой</th></tr>${catsOf("bel").map((x,i)=>row("bel",x,i)).join("")}</table></div>
+ <h3 class="eyebrow" style="margin:6px 0 0">Счетоводни казуси</h3>
+ <div class="tacc"><table class="gtab"><tr><th>Категория</th><th style="text-align:right">Налични</th><th style="text-align:right">Брой</th></tr>${catsOf("acc").map((x,i)=>row("acc",x,i)).join("")}</table></div>
+ <div class="row"><button class="btn" id="ggo">Генерирай</button><span class="counter" id="gsum">0 въпроса</span></div>
+ <div id="gprev" class="stack"></div></section>
+ <section class="panel"><h2>Запазени тестове</h2><div id="tlist" class="stack"></div></section>`};
+
+const pickFrom=(m,cat,n,exclude=new Set())=>{const arr=m==="bel"?BEL:CASES;return shuffle(arr.filter(x=>catOf[m](x)===cat&&!exclude.has(JSON.stringify(x)))).slice(0,n)};
+const orderCases=list=>{const cats=[...new Set(list.map(x=>x.cat))];return cats.flatMap(c=>list.filter(x=>x.cat===c).sort((a,b)=>CASES.indexOf(a.item)-CASES.indexOf(b.item)))};
+const orderBel=list=>{const out=[],seen=new Set();list.forEach(x=>{if(seen.has(x))return;if(x.item.passage){list.filter(y=>y.item.passage===x.item.passage).forEach(y=>{out.push(y);seen.add(y)})}else{out.push(x);seen.add(x)}});return out};
+
+const wireGen=()=>{if(!$("#gen"))return;
+ const sum=()=>{let t=0;view.querySelectorAll(".gn").forEach(i=>{let v=Math.max(0,Math.min(+i.max,Math.floor(+i.value||0)));t+=v});$("#gsum").textContent=`${t} ${t===1?"въпрос":"въпроса"}`};
+ view.querySelectorAll(".gn").forEach(i=>{i.oninput=sum;i.onchange=()=>{i.value=Math.max(0,Math.min(+i.max,Math.floor(+i.value||0)));sum()}});
+ $("#ggo").onclick=()=>{const g={name:$("#gname").value.trim()||`Тест ${tDate(Date.now())}`,bel:[],cases:[]};
+  view.querySelectorAll(".gn").forEach(i=>{const n=Math.max(0,Math.min(+i.max,Math.floor(+i.value||0)));if(!n)return;const m=i.dataset.m;
+   pickFrom(m,i.dataset.c,n).forEach(item=>(m==="bel"?g.bel:g.cases).push({cat:i.dataset.c,item}))});
+  if(!g.bel.length&&!g.cases.length){$("#gprev").innerHTML=`<p class="ferr">Задай поне един въпрос в някоя категория.</p>`;return}
+  g.bel=orderBel(g.bel);g.cases=orderCases(g.cases);GEN=g;renderGen()};
+ renderTList()};
+
+const renderGen=()=>{const box=$("#gprev");if(!box||!GEN)return;let n=0;
+ const line=(m,x,i)=>{n++;const it=x.item,txt=m==="bel"?it.q:it.title;
+  return `<div class="erow"><div class="et"><span class="mono">${n}.</span> <span class="pill${m==="acc"?" led":""}">${esc(x.cat)}</span> ${esc(txt.length>110?txt.slice(0,110)+"…":txt)}</div><button class="mini" data-sw="${m}:${i}">Смени</button></div>`};
+ box.innerHTML=`<div class="fb"><strong>${esc(GEN.name)} · ${GEN.bel.length+GEN.cases.length} въпроса</strong>Прегледай избора. „Смени“ взима друг случаен въпрос от същата категория.</div>
+  ${GEN.bel.length?`<h3 class="eyebrow" style="margin:4px 0 0">БЕЛ</h3>${GEN.bel.map((x,i)=>line("bel",x,i)).join("")}`:""}
+  ${GEN.cases.length?`<h3 class="eyebrow" style="margin:4px 0 0">Счетоводни казуси</h3>${GEN.cases.map((x,i)=>line("acc",x,i)).join("")}`:""}
+  <div class="row"><button class="btn" id="gsave"${DB?"":" disabled"}>Запази за учениците</button><button class="btn ghost" id="gpdf" hidden>Тест (PDF)</button><button class="btn ghost" id="gkey" hidden>Ключ (PDF)</button><button class="btn ghost" id="gcnl">Откажи</button></div>
+  <p id="gmsg" class="muted" style="font-size:13px"></p>`;
+ box.querySelectorAll("[data-sw]").forEach(b=>b.onclick=()=>{const [m,i]=b.dataset.sw.split(":"),list=m==="bel"?GEN.bel:GEN.cases,x=list[+i];
+  const used=new Set(list.map(y=>JSON.stringify(y.item)));const alt=pickFrom(m,x.cat,1,used)[0];
+  if(!alt){b.textContent="Няма друг";b.disabled=true;return}list[+i]={cat:x.cat,item:alt};if(m==="bel")GEN.bel=orderBel(GEN.bel);else GEN.cases=orderCases(GEN.cases);renderGen()});
+ $("#gcnl").onclick=()=>{GEN=null;box.innerHTML=""};
+ const test=()=>({id:Date.now().toString(36),name:GEN.name,created:Date.now(),bel:GEN.bel.map(x=>x.item),cases:GEN.cases.map(x=>x.item)});
+ $("#gsave").onclick=async e=>{const b=e.target;b.disabled=true;b.textContent="Запазвам…";
+  try{await saveM("tests",[...TESTS,test()]);GEN=null;box.innerHTML=`<div class="fb ok"><strong>Тестът е запазен</strong>Учениците го виждат в „Тестове от учителя“ в Начало.</div>`}
+  catch(err){b.disabled=false;b.textContent="Запази за учениците";$("#gmsg").textContent="Записът не успя. Провери връзката и опитай пак."}};
+ wirePdfButtons(()=>test(),$("#gpdf"),$("#gkey"),$("#gmsg"))};
+
+const wirePdfButtons=(getT,bt,bk,msg)=>useCap("downloads").then(d=>{if(!d||!bt)return;bt.hidden=false;bk.hidden=false;
+ const run=async(b,key)=>{const t=getT();b.disabled=true;msg.textContent="Подготвям PDF…";
+  try{const pm=await loadPdfMake();const blob=await new Promise(r=>pm.createPdf(testPdfDef(t,key)).getBlob(r));
+   const nm=t.name.replace(/[^\p{L}\p{N}]+/gu,"-").replace(/^-|-$/g,"")||"test";
+   await d.save({filename:`${nm}${key?"-ключ":""}.pdf`,data:blob});msg.textContent=key?"Ключът е запазен.":"Тестът е запазен."}
+  catch(e){msg.textContent=e?.code==="declined"?"Запазването е отказано.":"PDF не можа да се създаде. Провери връзката и опитай пак."}finally{b.disabled=false}};
+ bt.onclick=()=>run(bt,false);bk.onclick=()=>run(bk,true)});
+
+const renderTList=()=>{const box=$("#tlist");if(!box)return;
+ box.innerHTML=TESTS.length?TESTS.map((t,i)=>`<div class="erow"><div class="et"><strong>${esc(t.name)}</strong><br><span class="muted" style="font-size:12.5px">${tDate(t.created)} · ${(t.bel||[]).length} БЕЛ · ${(t.cases||[]).length} казуса</span></div>
+  <div class="row" style="gap:6px;flex:none"><button class="mini" data-tp="${i}" hidden>Тест PDF</button><button class="mini" data-tk="${i}" hidden>Ключ PDF</button><button class="mini dng" data-td="${i}">Изтрий</button></div></div>`).join("")+`<p id="tlmsg" class="muted" style="font-size:13px"></p>`
+  :`<p class="muted">Още няма запазени тестове. Генерирай тест и натисни „Запази за учениците“.</p>`;
+ box.querySelectorAll("[data-tp]").forEach(b=>{const i=+b.dataset.tp;wirePdfButtons(()=>TESTS[i],b,box.querySelector(`[data-tk="${i}"]`),$("#tlmsg"))});
+ box.querySelectorAll("[data-td]").forEach(b=>b.onclick=async()=>{if(!b.dataset.sure){b.dataset.sure=1;b.textContent="Потвърди";return}
+  b.disabled=true;try{await saveM("tests",TESTS.filter((_,j)=>j!==+b.dataset.td))}catch(e){b.disabled=false;b.textContent="Не успя"}})};
+
+/* --- PDF --- */
+const testPdfDef=(t,key)=>{const C=[],H=(x,o={})=>({text:x,...o});let n=0,prevP=null;
+ const blank=k=>Array.from({length:k},()=>({canvas:[{type:"line",x1:0,y1:0,x2:475,y2:0,lineWidth:.5,lineColor:"#9AA6C0"}],margin:[0,16,0,0]}));
+ const tbl=(head,rows,widths)=>({table:{headerRows:1,widths,body:[head.map(h=>({text:h,bold:true,fontSize:9,color:"#5B6782"})),...rows]},layout:{hLineColor:()=>"#D9E0EB",vLineColor:()=>"#D9E0EB",paddingTop:()=>5,paddingBottom:()=>5},margin:[0,4,0,0]});
+ C.push(H(key?`Ключ с отговори – ${t.name}`:t.name,{fontSize:16,bold:true}));
+ if(!key)C.push(H("Име: ______________________________   Клас: ________   Дата: ____________",{fontSize:10,margin:[0,10,0,14]}));
+ else C.push(H(`${tDate(t.created)} · ${tCount(t)} въпроса`,{fontSize:9,color:"#5B6782",margin:[0,4,0,12]}));
+ if((t.bel||[]).length)C.push(H("Част 1. Български език и литература",{fontSize:12,bold:true,color:"#2F5BD3",margin:[0,4,0,6]}));
+ (t.bel||[]).forEach(q=>{n++;const T=q.type||"choice";
+  if(!key&&q.passage&&q.passage!==prevP){C.push({table:{widths:["*"],body:[[{stack:[H("Прочетете текста и отговорете на следващите въпроси.",{bold:true,fontSize:9,color:"#5B6782",margin:[0,0,0,4]}),H(q.passage,{fontSize:9.5,lineHeight:1.3})],margin:[6,6,6,6]}]]},layout:{hLineColor:()=>"#D9E0EB",vLineColor:()=>"#D9E0EB"},margin:[0,6,0,6]})}
+  prevP=q.passage||null;
+  C.push({text:[{text:`${n}. `,bold:true},q.q],margin:[0,8,0,3],unbreakable:true});
+  if(key){
+   if(T==="choice")C.push(H(`${LTR[q.a]}) ${q.opts[q.a]}`,{bold:true,color:"#17805A",margin:[14,0,0,0]}));
+   else if(T==="text")C.push(H(q.answers.join(" / "),{bold:true,color:"#17805A",margin:[14,0,0,0]}));
+   else{C.push(H("Примерен отговор: "+q.model,{margin:[14,0,0,2]}));C.push({ul:q.criteria,fontSize:9.5,color:"#5B6782",margin:[24,0,0,0]})}
+   if(q.exp)C.push(H(q.exp,{fontSize:9,color:"#5B6782",margin:[14,2,0,0]}))}
+  else{
+   if(T==="choice")C.push({stack:q.opts.map((o,i)=>`${LTR[i]}) ${o}`),margin:[14,0,0,0],lineHeight:1.3});
+   else if(T==="text")C.push(...blank(1));
+   else C.push(...blank(Math.max(4,Math.min(10,Math.ceil((q.model||"").length/90)+2))))}});
+ if((t.cases||[]).length)C.push(H("Част 2. Счетоводни казуси",{fontSize:12,bold:true,color:"#17805A",margin:[0,16,0,6]}));
+ (t.cases||[]).forEach(c=>{n++;const T=c.type||"entries";
+  const B=[];B.push({text:[{text:`${n}. ${c.title}`,bold:true}],margin:[0,10,0,2]});B.push(H(c.text,{margin:[0,0,0,3]}));
+  if(T==="entries"){const rows=c.entries.map(e=>key?[`${e.d} ${ACC[e.d]||""}`,`${e.k} ${ACC[e.k]||""}`,{text:fmt(e.amt),alignment:"right"}]:[" "," "," "]);
+   B.push(tbl(["Дебит","Кредит","Сума, €"],rows,["*","*",80]))}
+  else if(T==="num")B.push(H(key?`${fmt(c.answer)} €`:"Отговор: ________________ €",key?{bold:true,color:"#17805A"}:{}));
+  else B.push(tbl(["Позиция","Сума, €"],c.rows.map(r=>[r.label,{text:key?fmt(r.amt):" ",alignment:"right"}]),["*",100]));
+  if(key&&c.exp)B.push(H(c.exp,{fontSize:9,color:"#5B6782",margin:[0,3,0,0]}));
+  C.push({stack:B,unbreakable:true})});
+ return {pageSize:"A4",pageMargins:[50,50,50,50],info:{title:t.name},defaultStyle:{font:"Roboto",fontSize:10.5,lineHeight:1.25,color:"#18233D"},
+  footer:(cur,tot)=>({text:`${t.name}${key?" – ключ":""} · ${cur} / ${tot}`,alignment:"center",fontSize:8,color:"#5B6782",margin:[0,18,0,0]}),content:C}};
+
+/* --- ученик --- */
+const tres=id=>store.get("tres_"+id,null);
+V.tests=()=>{if(testOpen&&!TESTS.find(t=>t.id===testOpen))testOpen=null;if(testOpen)return runTest(TESTS.find(t=>t.id===testOpen));
+ view.innerHTML=`<div class="stack"><p class="eyebrow">Тестове от учителя</p><h1>Избери тест</h1></div>
+ ${TESTS.length?`<div class="starts">${TESTS.map(t=>{const r=tres(t.id);return `<button class="start" data-t="${esc(t.id)}"><span><strong>${esc(t.name)}</strong><small>${tCount(t)} въпроса · ${tDate(t.created)}${r?` · последен резултат ${r.c}/${r.t}`:""}</small></span><span class="go">→</span></button>`}).join("")}</div>`
+  :`<p class="muted">Учителят още не е публикувал тестове.</p>`}`;
+ view.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{testOpen=b.dataset.t;V.tests();window.scrollTo(0,0)})};
+
+const runTest=t=>{let n=0,prevP=null;const opts=accOptions();
+ const block=(m,x,i)=>{n++;const id=`${m}${i}`;let h="";
+  if(m==="bel"){const T=x.type||"choice";
+   if(x.passage&&x.passage!==prevP)h+=`<details class="passage"><summary>Текст към задачите · ${(x.passage.match(/\S+/g)||[]).length} думи</summary><div class="ptx">${x.passage.split(/\n\s*\n|\n/).filter(p=>p.trim()).map(p=>`<p>${esc(p)}</p>`).join("")}</div></details>`;
+   prevP=x.passage||null;
+   h+=`<p class="qtext">${esc(x.q)}</p>`+(T==="choice"?`<div class="opts">${x.opts.map((o,j)=>`<label class="opt"><input type="radio" name="r_${id}" value="${j}"><span class="k">${LTR[j]})</span><span>${esc(o)}</span></label>`).join("")}</div>`
+    :T==="text"?`<input type="text" id="a_${id}" autocomplete="off" placeholder="Отговор">`:`<textarea id="a_${id}" class="oans" placeholder="Напиши отговора си…"></textarea>`)}
+  else{const T=x.type||"entries";h+=`<h2>${esc(x.title)}</h2><p>${esc(x.text)}</p>`+(T==="num"?`<label class="stack" style="gap:4px"><span class="eyebrow">Отговор, €</span><input type="number" id="a_${id}" inputmode="decimal"></label>`
+    :T==="table"?`<div class="tacc"><table class="fill"><tr><th>Позиция</th><th style="text-align:right">Сума, €</th></tr>${x.rows.map((r,j)=>`<tr id="tr_${id}_${j}"><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n"><input type="number" id="t_${id}_${j}" inputmode="decimal" aria-label="${esc(r.label)}"></td></tr>`).join("")}</table></div>`
+    :`<div class="stack ledger">${x.entries.map((_,j)=>`<div class="entry" id="e_${id}_${j}"><label>Дебит<select id="d_${id}_${j}">${opts}</select></label><label>Кредит<select id="k_${id}_${j}">${opts}</select></label><label class="amt">Сума, €<input type="number" id="s_${id}_${j}" inputmode="decimal"></label></div>`).join("")}</div>`)}
+  return `<section class="panel tq" id="q_${id}"><div class="qhead"><p class="eyebrow">Въпрос ${n}</p><span class="pill${m==="acc"?" led":""}">${esc(catOf[m](x))}</span></div>${h}<div class="tfb"></div></section>`};
+ view.innerHTML=`<div class="qhead"><div class="stack"><p class="eyebrow">Тест · ${tCount(t)} въпроса</p><h1>${esc(t.name)}</h1></div><button class="mini" id="tback">← Тестове</button></div>
+  <div id="tres"></div>
+  ${(t.bel||[]).map((x,i)=>block("bel",x,i)).join("")}${(t.cases||[]).map((x,i)=>block("acc",x,i)).join("")}
+  <div class="row"><button class="btn" id="tsub">Предай теста</button></div>`;
+ $("#tback").onclick=()=>{testOpen=null;V.tests();window.scrollTo(0,0)};
+ $("#tsub").onclick=()=>{let c=0,tot=0,open=0;const fb=(id,ok,html)=>{const q=$("#q_"+id);q.classList.add(ok===null?"op":ok?"ok":"no");q.querySelector(".tfb").innerHTML=html;q.querySelectorAll("input,select,textarea").forEach(e=>e.disabled=true)};
+  (t.bel||[]).forEach((x,i)=>{const id="bel"+i,T=x.type||"choice";
+   if(T==="open"){open++;fb(id,null,`<div class="fb"><strong>Примерен отговор</strong>${esc(x.model)}<ul class="rep">${x.criteria.map(k=>`<li class="g">${esc(k)}</li>`).join("")}</ul><p class="muted" style="font-size:13px;margin-top:6px">Сравни отговора си по критериите. Отворените задачи не влизат в автоматичния резултат.</p></div>`);return}
+   let ok;if(T==="choice"){const s=view.querySelector(`input[name="r_${id}"]:checked`);ok=!!s&&+s.value===x.a;
+    view.querySelectorAll(`input[name="r_${id}"]`).forEach(r=>{const l=r.closest(".opt");if(+r.value===x.a)l.classList.add("ok");else if(r.checked)l.classList.add("no")})}
+   else ok=x.answers.includes($("#a_"+id).value.trim().toLowerCase());
+   tot++;if(ok)c++;record("bel",ok,x.topic);
+   fb(id,ok,`<div class="fb ${ok?"ok":"no"}"><strong>${ok?"Вярно.":"Грешно."}</strong>${T==="text"&&!ok?`Верен отговор: ${esc(x.answers[0])}. `:""}${esc(x.exp||"")}${refHTML(x)}</div>`)});
+  (t.cases||[]).forEach((x,i)=>{const id="acc"+i,T=x.type||"entries";let ok,sol="";
+   if(T==="num"){ok=Math.abs(+$("#a_"+id).value-x.answer)<.005&&$("#a_"+id).value!=="";sol=`Верен отговор: ${fmt(x.answer)} €. `}
+   else if(T==="table"){ok=true;x.rows.forEach((r,j)=>{const v=$(`#t_${id}_${j}`).value,g=v!==""&&Math.abs(+v-r.amt)<=.5;if(!g)ok=false;$(`#tr_${id}_${j}`).className=g?"ok":"no"});
+    sol=`<div class="tacc" style="margin-top:6px"><table><tr><th>Позиция</th><th style="text-align:right">€</th></tr>${x.rows.map(r=>`<tr><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n">${fmt(r.amt)}</td></tr>`).join("")}</table></div>`}
+   else{const pool=x.entries.map(e=>({...e,used:false}));ok=true;
+    x.entries.forEach((_,j)=>{const d=$(`#d_${id}_${j}`).value,k=$(`#k_${id}_${j}`).value,a=+$(`#s_${id}_${j}`).value,mm=pool.find(e=>!e.used&&e.d===d&&e.k===k&&Math.abs(e.amt-a)<.005);if(mm)mm.used=true;else ok=false;$(`#e_${id}_${j}`).className="entry "+(mm?"ok":"no")});
+    sol=`<div class="tacc" style="margin-top:6px"><table><tr><th>Дт</th><th>Кт</th><th style="text-align:right">€</th></tr>${x.entries.map(e=>`<tr><td>${e.d}</td><td>${e.k}</td><td class="n">${fmt(e.amt)}</td></tr>`).join("")}</table></div>`}
+   tot++;if(ok)c++;record("acc",ok,catOf.acc(x));
+   fb(id,ok,`<div class="fb ${ok?"ok":"no"}"><strong>${ok?"Вярно.":"Грешно."}</strong>${esc(x.exp||"")}${ok?"":sol}</div>`)});
+  store.set("tres_"+t.id,{c,t:tot,d:Date.now()});
+  const pct=tot?Math.round(c/tot*100):0;
+  $("#tres").innerHTML=`<section class="panel"><div class="stats"><div class="stat"><div class="v">${c}/${tot}</div><div class="k">верни отговора</div></div><div class="stat"><div class="v">${pct}%</div><div class="k">успеваемост</div></div><div class="stat"><div class="v">${open}</div><div class="k">отворени за самопроверка</div></div></div>
+   <div class="row"><button class="btn" id="tagain">Реши отново</button><button class="btn ghost" id="tback2">Към тестовете</button></div></section>`;
+  $("#tsub").hidden=true;$("#tagain").onclick=()=>{runTest(t);window.scrollTo(0,0)};$("#tback2").onclick=()=>{testOpen=null;V.tests();window.scrollTo(0,0)};window.scrollTo(0,0)}};
+
 /* --- зареждане от хранилището --- */
 const tStatText=fromT=>fromT?W(`Учениците виждат качените материали${updatedAt?" · последна промяна "+new Date(updatedAt).toLocaleString("bg-BG",{dateStyle:"short",timeStyle:"short"}):""}.`,"Използват се материалите, заредени на това устройство."):W("Учениците виждат примерните материали. Качи свои или редактирай тези.","Използват се вградените материали. Можеш да заредиш Excel файл от учителя.");
 const tStat=()=>{const fromT=Object.values(fromTeacher).some(Boolean),a=$("#tstat"),c=$("#tcnt"),r=$("#rst");if(!a)return;
  a.textContent=tStatText(fromT);
- c.textContent=`${BEL.length} БЕЛ въпроса · ${TOPICS.length} теми · ${CASES.length} казуса · ${Object.keys(ACC).length} сметки`;if(r&&!r.dataset.sure)r.disabled=!fromT};
-const refresh=()=>{clampIdx();if(curView==="teacher"){if(!EDITOR)return;tStat();if(!formOpen)renderList()}else if(curView!=="essay")V[curView]()};
+ c.textContent=`${BEL.length} БЕЛ въпроса · ${CASES.length} казуса · ${Object.keys(ACC).length} сметки`;if(r&&!r.dataset.sure)r.disabled=!fromT};
+const refresh=()=>{clampIdx();if(curView==="teacher"){if(!EDITOR)return;tStat();if(!formOpen)renderList();const gw=$("#genwrap");if(gw&&!GEN&&![...view.querySelectorAll(".gn")].some(i=>+i.value>0)){gw.innerHTML=genHTML();wireGen()}else renderTList()}else if(curView!=="essay")V[curView]()};
 Promise.all([useCap("db"),useCap("user")]).then(async([db,user])=>{DB=db;
- EDITOR=!!(user&&await user.canEdit().catch(()=>false));if(EDITOR&&!formOpen&&curView!=="essay")V[curView]();
+ EDITOR=!!(user&&await user.canEdit().catch(()=>false));if(EDITOR&&!formOpen&&true)V[curView]();
  if(!db)return;
  db.collection("content").onSnapshot(snap=>{const got={};snap.docs.forEach(d=>{if(d.exists)got[d.id]=d.data()});let changed=false;
-  for(const m of ["bel","topics","cases","acc"]){const v=got[m]?.items??DEF[m];fromTeacher[m]=!!got[m];
+  for(const m of ["bel","topics","cases","acc","tests"]){const v=got[m]?.items??DEF[m];if(m!=="tests")fromTeacher[m]=!!got[m];
    if(JSON.stringify(v)!==JSON.stringify(getM(m))){putM(m,JSON.parse(JSON.stringify(v)));changed=true}}
   updatedAt=Math.max(0,...Object.values(got).map(x=>x.updatedAt||0))||null;
   if(changed||curView==="teacher")refresh()},()=>{});
