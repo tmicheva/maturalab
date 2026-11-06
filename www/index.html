@@ -174,6 +174,9 @@ label.opt:has(input:checked){border-color:var(--accent);background:var(--accent-
 .tq.ok{border-color:var(--good)} .tq.no{border-color:var(--bad)}
 .tfb:empty{display:none}
 .tq label.opt.ok{border-color:var(--good);background:var(--ledger-soft)} .tq label.opt.no{border-color:var(--bad);background:var(--bad-soft)}
+.accin{font-family:var(--f-mono)}
+.acchint{display:block;min-height:1.3em;margin-top:3px;font-family:var(--f-body);font-size:11.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--muted);line-height:1.3}
+.acchint.bad{color:var(--bad)}
 /* progress */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat{border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}
@@ -255,6 +258,12 @@ const refHTML=q=>{const r=refOf(q);return r?`<a class="kref" href="${esc(r.url)}
 const ACC_SEC={"1":"Сметки за капитали","2":"Дълготрайни активи","3":"Материални запаси","4":"Разчети","5":"Финансови средства","6":"Разходи","7":"Приходи","8":"Други","9":"Условни активи и пасиви"};
 const accSorted=()=>Object.entries(ACC).sort((a,b)=>a[0].localeCompare(b[0]));
 const accOptions=()=>{let h=`<option value="">—</option>`,sec="";for(const [k,v] of accSorted()){if(k[0]!==sec){if(sec)h+="</optgroup>";sec=k[0];h+=`<optgroup label="${k[0]} · ${ACC_SEC[k[0]]||"Други"}">`}h+=`<option value="${k}">${k} ${esc(v)}</option>`}return h+(sec?"</optgroup>":"")};
+const accDL=()=>`<datalist id="acclist">${accSorted().map(([k,v])=>`<option value="${k} ${esc(v)}"></option>`).join("")}</datalist>`;
+const accInput=id=>`<input type="text" class="accin" id="${id}" list="acclist" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="№ или име"><small class="acchint" id="h_${id}"></small>`;
+const accVal=el=>{const m=((el&&el.value)||"").match(/^\s*(\d{3,4})(?!\d)/);return m?m[1]:""};
+const wireAcc=()=>view.querySelectorAll(".accin").forEach(el=>{const h=$("#h_"+el.id);
+ const up=()=>{const v=el.value.trim(),k=accVal(el),ok=k&&ACC[k];h.textContent=!v?"":ok?ACC[k]:/^\d+$/.test(v)&&v.length<3?"":"Няма такава сметка";h.classList.toggle("bad",!!v&&!ok&&!(/^\d+$/.test(v)&&v.length<3))};
+ el.oninput=up;el.onchange=()=>{const k=accVal(el);if(k&&ACC[k])el.value=k;up()};up()});
 const ACAT=c=>({num:"Изчисления",table:"Таблици"})[c.type]||"Счетоводни статии";
 function recordSkip(mod,cat){if(stats.demo)stats=EMPTY();stats.skip[mod][cat]=(stats.skip[mod][cat]||0)+1;store.set("stats",stats)}
 let qi=0, ci=0;
@@ -342,7 +351,7 @@ ${ta.value.slice(0,4000)}
    view.querySelectorAll(".opt").forEach(x=>{x.disabled=true;if(+x.dataset.i===q.a)x.classList.add("ok")});
    if(i!==q.a)b.classList.add("no");done(i===q.a)});};
 
-V.acc=()=>{const L=listOf("acc");if(ci>=L.length)ci=0;const idx=L[ci],c=CASES[idx],T=c.type||"entries";const opts=accOptions();
+V.acc=()=>{const L=listOf("acc");if(ci>=L.length)ci=0;const idx=L[ci],c=CASES[idx],T=c.type||"entries";
  view.innerHTML=`
  ${filtHTML("acc")}
  <div class="qhead"><p class="eyebrow">Казус ${ci+1} от ${L.length}</p><div class="row" style="gap:6px">${editBtn("cases",idx)}<span class="pill led">${T==="num"?"Изчисление":T==="table"?"Таблица":"Счетоводна статия"}</span></div></div>
@@ -351,12 +360,12 @@ V.acc=()=>{const L=listOf("acc");if(ci>=L.length)ci=0;const idx=L[ci],c=CASES[id
  ${T==="num"?`<label class="stack" style="gap:4px"><span class="eyebrow">Отговор, €</span><input type="number" id="num" inputmode="decimal"></label>`
   :T==="table"?`<div class="tacc"><table class="fill"><tr><th>Позиция</th><th style="text-align:right">Сума, €</th></tr>${c.rows.map((r,i)=>`<tr id="tr${i}"><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n"><input type="number" id="t${i}" inputmode="decimal" aria-label="${esc(r.label)}"></td></tr>`).join("")}</table></div>`
   :`<p class="muted" style="font-size:13px">Съставете ${c.entries.length===1?"една статия":c.entries.length+" статии"}: дебит, кредит и сума.</p>
-   <div class="stack ledger">${c.entries.map((_,i)=>`<div class="entry" id="e${i}"><label>Дебит<select id="d${i}">${opts}</select></label><label>Кредит<select id="k${i}">${opts}</select></label><label class="amt">Сума, €<input type="number" id="a${i}" inputmode="decimal"></label></div>`).join("")}</div>`}
+   <div class="stack ledger">${c.entries.map((_,i)=>`<div class="entry" id="e${i}"><label>Дебит${accInput("d"+i)}</label><label>Кредит${accInput("k"+i)}</label><label class="amt">Сума, €<input type="number" id="a${i}" inputmode="decimal"></label></div>`).join("")}</div>`}
  <div class="row"><button class="btn" id="chk" style="background:var(--ledger);border-color:var(--ledger)">Провери</button><button class="btn ghost" id="skip" style="color:var(--ledger);border-color:var(--ledger)">${ci<L.length-1?"Пропусни":"Пропусни и завърши"}</button></div><div id="fb"></div></section>
  <section class="panel"><h2>Калкулатор: линейна амортизация</h2><div class="calc">
   <label>Стойност, €<input type="number" id="cv" value="4320"></label><label>Остатъчна, €<input type="number" id="cr" value="0"></label><label>Години<input type="number" id="cy" value="3"></label></div>
-  <p class="res" id="cres"></p></section>`;
- wireEdit();wireFilt("acc");const calc=()=>{const v=+$("#cv").value,r=+$("#cr").value,y=+$("#cy").value;
+  <p class="res" id="cres"></p></section>${accDL()}`;
+ wireEdit();wireFilt("acc");wireAcc();const calc=()=>{const v=+$("#cv").value,r=+$("#cr").value,y=+$("#cy").value;
   $("#cres").innerHTML=y>0&&v>=r?`Годишно <b>${fmt((v-r)/y)} €</b> · месечно <b>${fmt((v-r)/y/12)} €</b>`:"Въведете стойност ≥ остатъчна и срок над 0."};
  ["#cv","#cr","#cy"].forEach(s=>$(s).oninput=calc);calc();
  $("#skip").onclick=()=>{recordSkip("acc",catOf.acc(c));if(ci<L.length-1){ci++;V.acc()}else{ci=0;go("progress")}};
@@ -365,7 +374,7 @@ V.acc=()=>{const L=listOf("acc");if(ci>=L.length)ci=0;const idx=L[ci],c=CASES[id
   else if(T==="table"){ok=true;c.rows.forEach((r,i)=>{const v=$("#t"+i).value,good=v!==""&&Math.abs(+v-r.amt)<=.5;if(!good)ok=false;$("#tr"+i).className=good?"ok":"no"});
    sol=`<div class="tacc" style="margin-top:8px"><table><tr><th>Позиция</th><th style="text-align:right">€</th></tr>${c.rows.map(r=>`<tr><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n">${fmt(r.amt)}</td></tr>`).join("")}</table></div>`}
   else{const pool=c.entries.map(e=>({...e,used:false}));ok=true;
-   c.entries.forEach((_,i)=>{const d=$("#d"+i).value,k=$("#k"+i).value,a=+$("#a"+i).value;
+   c.entries.forEach((_,i)=>{const d=accVal($("#d"+i)),k=accVal($("#k"+i)),a=+$("#a"+i).value;
     const m=pool.find(e=>!e.used&&e.d===d&&e.k===k&&Math.abs(e.amt-a)<.005);
     if(m)m.used=true;else ok=false;$("#e"+i).className="entry "+(m?"ok":"no")});
    sol=`<div class="tacc" style="margin-top:8px"><table><tr><th>Дт</th><th>Кт</th><th style="text-align:right">€</th></tr>${c.entries.map(e=>`<tr><td>${e.d}</td><td>${e.k}</td><td class="n">${fmt(e.amt)}</td></tr>`).join("")}</table></div>`}
@@ -860,7 +869,7 @@ V.tests=()=>{if(testOpen&&!TESTS.find(t=>t.id===testOpen))testOpen=null;if(testO
   :`<p class="muted">Учителят още не е публикувал тестове.</p>`}`;
  view.querySelectorAll("[data-t]").forEach(b=>b.onclick=()=>{testOpen=b.dataset.t;V.tests();window.scrollTo(0,0)})};
 
-const runTest=t=>{let n=0,prevP=null;const opts=accOptions();
+const runTest=t=>{let n=0,prevP=null;
  const block=(m,x,i)=>{n++;const id=`${m}${i}`;let h="";
   if(m==="bel"){const T=x.type||"choice";
    if(x.passage&&x.passage!==prevP)h+=`<details class="passage"><summary>Текст към задачите · ${(x.passage.match(/\S+/g)||[]).length} думи</summary><div class="ptx">${x.passage.split(/\n\s*\n|\n/).filter(p=>p.trim()).map(p=>`<p>${esc(p)}</p>`).join("")}</div></details>`;
@@ -869,12 +878,13 @@ const runTest=t=>{let n=0,prevP=null;const opts=accOptions();
     :T==="text"?`<input type="text" id="a_${id}" autocomplete="off" placeholder="Отговор">`:`<textarea id="a_${id}" class="oans" placeholder="Напиши отговора си…"></textarea>`)}
   else{const T=x.type||"entries";h+=`<h2>${esc(x.title)}</h2><p>${esc(x.text)}</p>`+(T==="num"?`<label class="stack" style="gap:4px"><span class="eyebrow">Отговор, €</span><input type="number" id="a_${id}" inputmode="decimal"></label>`
     :T==="table"?`<div class="tacc"><table class="fill"><tr><th>Позиция</th><th style="text-align:right">Сума, €</th></tr>${x.rows.map((r,j)=>`<tr id="tr_${id}_${j}"><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n"><input type="number" id="t_${id}_${j}" inputmode="decimal" aria-label="${esc(r.label)}"></td></tr>`).join("")}</table></div>`
-    :`<div class="stack ledger">${x.entries.map((_,j)=>`<div class="entry" id="e_${id}_${j}"><label>Дебит<select id="d_${id}_${j}">${opts}</select></label><label>Кредит<select id="k_${id}_${j}">${opts}</select></label><label class="amt">Сума, €<input type="number" id="s_${id}_${j}" inputmode="decimal"></label></div>`).join("")}</div>`)}
+    :`<div class="stack ledger">${x.entries.map((_,j)=>`<div class="entry" id="e_${id}_${j}"><label>Дебит${accInput(`d_${id}_${j}`)}</label><label>Кредит${accInput(`k_${id}_${j}`)}</label><label class="amt">Сума, €<input type="number" id="s_${id}_${j}" inputmode="decimal"></label></div>`).join("")}</div>`)}
   return `<section class="panel tq" id="q_${id}"><div class="qhead"><p class="eyebrow">Въпрос ${n}</p><span class="pill${m==="acc"?" led":""}">${esc(catOf[m](x))}</span></div>${h}<div class="tfb"></div></section>`};
  view.innerHTML=`<div class="qhead"><div class="stack"><p class="eyebrow">Тест · ${tCount(t)} въпроса</p><h1>${esc(t.name)}</h1></div><button class="mini" id="tback">← Тестове</button></div>
   <div id="tres"></div>
   ${(t.bel||[]).map((x,i)=>block("bel",x,i)).join("")}${(t.cases||[]).map((x,i)=>block("acc",x,i)).join("")}
-  <div class="row"><button class="btn" id="tsub">Предай теста</button></div>`;
+  <div class="row"><button class="btn" id="tsub">Предай теста</button></div>${accDL()}`;
+ wireAcc();
  $("#tback").onclick=()=>{testOpen=null;V.tests();window.scrollTo(0,0)};
  $("#tsub").onclick=()=>{let c=0,tot=0,open=0;const fb=(id,ok,html)=>{const q=$("#q_"+id);q.classList.add(ok===null?"op":ok?"ok":"no");q.querySelector(".tfb").innerHTML=html;q.querySelectorAll("input,select,textarea").forEach(e=>e.disabled=true)};
   (t.bel||[]).forEach((x,i)=>{const id="bel"+i,T=x.type||"choice";
@@ -889,7 +899,7 @@ const runTest=t=>{let n=0,prevP=null;const opts=accOptions();
    else if(T==="table"){ok=true;x.rows.forEach((r,j)=>{const v=$(`#t_${id}_${j}`).value,g=v!==""&&Math.abs(+v-r.amt)<=.5;if(!g)ok=false;$(`#tr_${id}_${j}`).className=g?"ok":"no"});
     sol=`<div class="tacc" style="margin-top:6px"><table><tr><th>Позиция</th><th style="text-align:right">€</th></tr>${x.rows.map(r=>`<tr><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n">${fmt(r.amt)}</td></tr>`).join("")}</table></div>`}
    else{const pool=x.entries.map(e=>({...e,used:false}));ok=true;
-    x.entries.forEach((_,j)=>{const d=$(`#d_${id}_${j}`).value,k=$(`#k_${id}_${j}`).value,a=+$(`#s_${id}_${j}`).value,mm=pool.find(e=>!e.used&&e.d===d&&e.k===k&&Math.abs(e.amt-a)<.005);if(mm)mm.used=true;else ok=false;$(`#e_${id}_${j}`).className="entry "+(mm?"ok":"no")});
+    x.entries.forEach((_,j)=>{const d=accVal($(`#d_${id}_${j}`)),k=accVal($(`#k_${id}_${j}`)),a=+$(`#s_${id}_${j}`).value,mm=pool.find(e=>!e.used&&e.d===d&&e.k===k&&Math.abs(e.amt-a)<.005);if(mm)mm.used=true;else ok=false;$(`#e_${id}_${j}`).className="entry "+(mm?"ok":"no")});
     sol=`<div class="tacc" style="margin-top:6px"><table><tr><th>Дт</th><th>Кт</th><th style="text-align:right">€</th></tr>${x.entries.map(e=>`<tr><td>${e.d}</td><td>${e.k}</td><td class="n">${fmt(e.amt)}</td></tr>`).join("")}</table></div>`}
    tot++;if(ok)c++;record("acc",ok,catOf.acc(x));
    fb(id,ok,`<div class="fb ${ok?"ok":"no"}"><strong>${ok?"Вярно.":"Грешно."}</strong>${esc(x.exp||"")}${ok?"":sol}</div>`)});
