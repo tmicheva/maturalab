@@ -459,8 +459,8 @@ V.essay=()=>{const EL=essayList();if(!EL.includes(essayTopic))essayTopic=EL[0]??
 
  <section class="panel"><div class="qhead"><h2>5. Предай на учителя</h2><span class="pill">Google Classroom</span></div>
  <label class="stack" style="gap:4px"><span class="eyebrow">Име и клас</span><input type="text" id="sname" value="${esc(store.get("sname",""))}" placeholder="Мария Иванова, 12 б"></label>
- <ol class="steps"><li>Натисни „Копирай и отвори Classroom“.</li><li>Отвори заданието от учителя.</li><li>Постави текста в документ или прикачи PDF файла чрез „Добавяне или създаване“ → „Файл“.</li><li>Натисни „Предаване“.</li></ol>
- <div class="row"><a class="btn" id="cls" href="https://classroom.google.com/" target="_blank" rel="noopener">Копирай и отвори Classroom</a><button class="btn ghost" id="dl" hidden>Запази като PDF</button></div>
+ ${OFFLINE?`<ol class="steps"><li>Натисни „Изпрати PDF“ и избери <strong>Classroom</strong> от списъка.</li><li>Избери класа и заданието, после „Предаване“.</li></ol><p class="muted" style="font-size:13px">Ако Classroom не се появи в списъка, файлът се запазва на телефона. Тогава го прикачи в заданието чрез „Добавяне или създаване“ → „Файл“.</p>`:`<ol class="steps"><li>Натисни „Копирай и отвори Classroom“.</li><li>Отвори заданието от учителя.</li><li>Постави текста в документ или прикачи PDF файла чрез „Добавяне или създаване“ → „Файл“.</li><li>Натисни „Предаване“.</li></ol>`}
+ <div class="row"><a class="btn" id="cls" href="https://classroom.google.com/" target="_blank" rel="noopener">Копирай и отвори Classroom</a><button class="btn ghost" id="dl" hidden>${OFFLINE?"Изпрати PDF":"Запази като PDF"}</button></div>
  <p id="sfb" class="muted" style="font-size:13px"></p>
  <textarea id="sub" readonly hidden aria-label="Текст за предаване" style="min-height:160px"></textarea></section>
 
@@ -616,7 +616,7 @@ ${ps.join("\n\n")}
    b.disabled=true;$("#sfb").textContent="Подготвям PDF…";
    let file;try{file={filename:base+".pdf",data:await buildPdf(await loadPdf())}}
    catch(e){file={filename:base+".txt",data:subText()}}
-   try{await d.save(file);$("#sfb").textContent=file.filename.endsWith(".pdf")?"PDF файлът е запазен. Прикачи го към заданието в Classroom.":"PDF не можа да се създаде, затова е запазен текстов файл. Прикачи го към заданието."}
+   try{const st=await (OFFLINE?offSave({...file,share:true}):d.save(file));if(st&&st.status==="shared"){$("#sfb").textContent="Файлът е изпратен. Ако си избрал Classroom, отвори заданието и натисни „Предаване“.";return}$("#sfb").textContent=file.filename.endsWith(".pdf")?"PDF файлът е запазен. Прикачи го към заданието в Classroom.":"PDF не можа да се създаде, затова е запазен текстов файл. Прикачи го към заданието."}
    catch(err){$("#sfb").textContent=err?.code==="cancelled"||err?.code==="declined"?"Запазването е отказано.":"Файлът не можа да се запази. Използвай копирането."}
    finally{b.disabled=false}}});
 
@@ -710,7 +710,9 @@ const localDB=()=>{const subs=[],key="ml_content";const read=()=>{try{return JSO
  const write=o=>{try{localStorage.setItem(key,JSON.stringify(o))}catch(e){throw {code:"quota_exceeded"}}};
  const emit=()=>setTimeout(()=>{const o=read(),sn={docs:Object.entries(o).map(([id,v])=>({id,exists:true,data:()=>v}))};subs.forEach(f=>f(sn))},0);
  return {collection:()=>({onSnapshot:n=>{subs.push(n);emit();return()=>{}}}),doc:p=>{const id=p.split("/")[1];return {set:async v=>{const o=read();o[id]=v;write(o);emit()},delete:async()=>{const o=read();delete o[id];write(o);emit()}}}}};
-const offSave=async({filename,data})=>{const blob=data instanceof Blob?data:new Blob([data]),C=window.Capacitor;
+const offSave=async({filename,data,share})=>{const blob=data instanceof Blob?data:new Blob([data]),C=window.Capacitor;
+ if(share&&!C?.isNativePlatform?.()&&navigator.canShare){const f=new File([blob],filename,{type:blob.type||"application/pdf"});
+  if(navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:filename});return {status:"shared"}}catch(e){if(e&&e.name==="AbortError")throw {code:"declined"}}}}
  if(C?.isNativePlatform?.()){const b64=await new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(",")[1]);r.onerror=no;r.readAsDataURL(blob)});
   const {uri}=await C.Plugins.Filesystem.writeFile({path:filename,data:b64,directory:"CACHE"});
   try{await C.Plugins.Share.share({title:filename,files:[uri]})}catch(e){if(/cancel/i.test(String(e?.message||e)))throw {code:"declined"};throw e}return {status:"saved"}}
