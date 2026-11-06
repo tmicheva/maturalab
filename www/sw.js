@@ -1,0 +1,9 @@
+// МатураЛаб — офлайн кеш. Версията се сменя автоматично при промяна на файловете.
+const CACHE="maturalab-cfed785bf5";
+const ASSETS=["./", "./content.js", "./content.json", "./fonts/fonts.css", "./fonts/golos-text-cyrillic-400-normal.woff2", "./fonts/golos-text-cyrillic-500-normal.woff2", "./fonts/golos-text-cyrillic-600-normal.woff2", "./fonts/golos-text-latin-400-normal.woff2", "./fonts/golos-text-latin-500-normal.woff2", "./fonts/golos-text-latin-600-normal.woff2", "./fonts/ibm-plex-mono-cyrillic-400-normal.woff2", "./fonts/ibm-plex-mono-cyrillic-500-normal.woff2", "./fonts/ibm-plex-mono-latin-400-normal.woff2", "./fonts/ibm-plex-mono-latin-500-normal.woff2", "./fonts/unbounded-cyrillic-500-normal.woff2", "./fonts/unbounded-cyrillic-700-normal.woff2", "./fonts/unbounded-latin-500-normal.woff2", "./fonts/unbounded-latin-700-normal.woff2", "./icons/apple-touch-icon.png", "./icons/icon-192.png", "./icons/icon-512.png", "./icons/icon-maskable-512.png", "./index.html", "./manifest.webmanifest", "./vendor/pdfmake.min.js", "./vendor/vfs_fonts.js", "./vendor/xlsx.full.min.js"];
+self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()))});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith("maturalab-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
+self.addEventListener("fetch",e=>{const u=new URL(e.request.url);if(e.request.method!=="GET"||u.origin!==location.origin)return;
+ // content.json: първо мрежата (за нови материали), после кеша
+ if(u.pathname.endsWith("/content.json")){e.respondWith(fetch(e.request).then(r=>{const c=r.clone();caches.open(CACHE).then(x=>x.put(e.request,c));return r}).catch(()=>caches.match(e.request)));return}
+ e.respondWith(caches.match(e.request,{ignoreSearch:true}).then(r=>r||fetch(e.request).catch(()=>caches.match("./"))))});

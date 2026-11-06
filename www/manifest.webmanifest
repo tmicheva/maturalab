@@ -1,0 +1,30 @@
+{
+ "name": "МатураЛаб",
+ "short_name": "МатураЛаб",
+ "description": "Самоподготовка за ДЗИ по БЕЛ и счетоводни казуси",
+ "lang": "bg",
+ "start_url": "./",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#F2F5F9",
+ "theme_color": "#2F5BD3",
+ "icons": [
+  {
+   "src": "icons/icon-192.png",
+   "sizes": "192x192",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-512.png",
+   "sizes": "512x512",
+   "type": "image/png"
+  },
+  {
+   "src": "icons/icon-maskable-512.png",
+   "sizes": "512x512",
+   "type": "image/png",
+   "purpose": "maskable"
+  }
+ ]
+}

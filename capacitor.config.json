@@ -1,0 +1,8 @@
+{
+  "appId": "bg.maturalab.app",
+  "appName": "МатураЛаб",
+  "webDir": "www",
+  "android": {
+    "allowMixedContent": false
+  }
+}
