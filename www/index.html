@@ -166,6 +166,7 @@ table.fill tr.ok td{background:var(--ledger-soft)} table.fill tr.no td{backgroun
 .filt .segb{flex:none;white-space:nowrap}
 .filt.sub .segb{font-size:12.5px;padding:4px 10px}
 .segb.led[aria-pressed="true"]{background:var(--ledger);border-color:var(--ledger)}
+.inst{border-color:var(--accent)}
 /* progress */
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
 .stat{border:1px solid var(--line);border-radius:10px;padding:10px;min-width:0}
@@ -363,6 +364,7 @@ const V={};
 V.home=()=>{view.innerHTML=`
  <div class="stack"><p class="eyebrow">STEM урок · 12 клас</p><h1>Подготовка за ДЗИ по БЕЛ и счетоводни казуси в едно приложение</h1>
  <p class="muted">Учиш, проверяваш се и виждаш напредъка си като данни.</p></div>
+ ${OFFLINE?installHTML():""}
  <section class="panel"><h2>Къде е STEM в урока</h2><div class="map">
   <div><span class="l">S</span><span class="t">Наука</span><span class="d">Анализ на грешките по теми — хипотеза и проверка.</span></div>
   <div><span class="l">T</span><span class="t">Технологии</span><span class="d">Мобилно приложение с незабавна обратна връзка.</span></div>
@@ -373,8 +375,8 @@ V.home=()=>{view.innerHTML=`
   ${[["bel","Тест по БЕЛ",BEL.length+" задачи · правопис, пунктуация, литература"],["essay","Аргументативен текст","Маркиране на структурата, показатели, AI обратна връзка"],["acc","Счетоводни казуси",CASES.length+" казуса · двойно записване, ДДС"],["progress","Моят прогрес","Точност по модули и теми"],...(EDITOR&&!OFFLINE?[["teacher",W("Материали · за учителя","Материали"),W("Качване от Excel и редакция на задачите","Зареди материали от Excel файл на учителя")]]:[])]
    .map(([v,t,s])=>`<button class="start" data-go="${v}"><span><strong>${t}</strong><small>${s}</small></span><span class="go">→</span></button>`).join("")}
  </div>
- <p class="note">Съдържанието е примерно. В следващата версия учителят зарежда свои въпроси и казуси.</p>`;
- view.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));};
+`;
+ view.querySelectorAll("[data-go]").forEach(b=>b.onclick=()=>go(b.dataset.go));wireInstall()};
 
 V.bel=()=>{const L=listOf("bel");if(qi>=L.length)qi=0;const idx=L[qi],q=BEL[idx],T=q.type||"choice",wcnt=t=>(t.match(/\S+/g)||[]).length,skipB=`<button class="btn ghost" id="skip">${qi<L.length-1?"Пропусни":"Пропусни и завърши"}</button>`;view.innerHTML=`
  ${filtHTML("bel")}
@@ -689,6 +691,19 @@ let DB=null,EDITOR=false,curView="home",formOpen=false,editTarget=null,teacherTa
 const tk=()=>{let h=7;for(const ch of (TOPICS[essayTopic]?.t||""))h=(h*31+ch.codePointAt(0))>>>0;return "t"+h.toString(36)};
 const clampIdx=()=>{qi=Math.max(0,Math.min(qi,BEL.length-1));ci=Math.max(0,Math.min(ci,CASES.length-1));essayTopic=Math.max(0,Math.min(essayTopic,TOPICS.length-1))};
 const OFFLINE=!!window.MATURA_OFFLINE;
+let instPrompt=null;
+const isStandalone=()=>{try{return matchMedia("(display-mode: standalone)").matches||navigator.standalone===true}catch(e){return false}};
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)||(navigator.platform==="MacIntel"&&navigator.maxTouchPoints>1);
+const inAppBrowser=()=>/FBAN|FBAV|Instagram|Line\/|Viber|wv\)|GSA\//i.test(navigator.userAgent);
+window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();instPrompt=e;if(curView==="home")V.home()});
+window.addEventListener("appinstalled",()=>{instPrompt=null;if(curView==="home")V.home()});
+const installHTML=()=>{if(isStandalone())return "";
+ if(instPrompt)return `<section class="panel inst"><h2>Инсталирай на телефона</h2><p class="muted" style="font-size:13.5px">Приложението ще има икона и ще работи без интернет.</p><div><button class="btn" id="instb">Инсталирай</button></div></section>`;
+ const steps=inAppBrowser()?`<li>Отвори менюто ⋮ и избери <strong>„Отваряне в браузър“</strong> (Chrome или Safari).</li><li>После следвай указанията тук.</li>`
+  :isIOS()?`<li>Натисни <strong>Сподели</strong> (квадратче със стрелка нагоре).</li><li>Избери <strong>„Добави към началния екран“</strong> → <strong>Добави</strong>.</li>`
+  :`<li>Отвори менюто <strong>⋮</strong> горе вдясно.</li><li>Избери <strong>„Инсталиране на приложението“</strong> или <strong>„Добавяне към началния екран“</strong>.</li>`;
+ return `<section class="panel inst"><h2>Инсталирай на телефона</h2><ol class="steps">${steps}</ol><p class="muted" style="font-size:13px">След това приложението се отваря от иконата и работи без интернет.</p></section>`};
+const wireInstall=()=>{const b=$("#instb");if(b)b.onclick=async()=>{const e=instPrompt;if(!e)return;instPrompt=null;e.prompt();try{await e.userChoice}catch(_){}V.home()}};
 const applyContent=j=>{if(j)for(const m of ["bel","topics","cases","acc"])if(j[m])DEF[m]=j[m]};
 const contentReady=!OFFLINE?Promise.resolve():fetch("content.json").then(r=>{if(!r.ok)throw 0;return r.json()}).then(applyContent).catch(()=>applyContent(window.MATURA_CONTENT));
 const localDB=()=>{const subs=[],key="ml_content";const read=()=>{try{return JSON.parse(localStorage.getItem(key)||"{}")}catch(e){return {}}};
