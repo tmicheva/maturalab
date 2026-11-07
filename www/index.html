@@ -397,13 +397,8 @@ V.acc=()=>{const L=listOf("acc");if(ci>=L.length)ci=0;const idx=L[ci],c=CASES[id
   :T==="table"?`<div class="tacc"><table class="fill"><tr><th>Позиция</th><th style="text-align:right">Сума, €</th></tr>${c.rows.map((r,i)=>`<tr id="tr${i}"><td style="font-family:var(--f-body)">${esc(r.label)}</td><td class="n"><input type="number" id="t${i}" inputmode="decimal" aria-label="${esc(r.label)}"></td></tr>`).join("")}</table></div>`
   :`<p class="muted" style="font-size:13px">Съставете ${c.entries.length===1?"една статия":c.entries.length+" статии"}: дебит, кредит и сума.</p>
    <div class="stack ledger">${c.entries.map((_,i)=>`<div class="entry" id="e${i}"><label>Дебит${accInput("d"+i)}</label><label>Кредит${accInput("k"+i)}</label><label class="amt">Сума, €<input type="number" id="a${i}" inputmode="decimal"></label></div>`).join("")}</div>`}
- <div class="row"><button class="btn" id="chk" style="background:var(--ledger);border-color:var(--ledger)">Провери</button><button class="btn ghost" id="skip" style="color:var(--ledger);border-color:var(--ledger)">${ci<L.length-1?"Пропусни":"Пропусни и завърши"}</button></div><div id="fb"></div></section>
- <section class="panel"><h2>Калкулатор: линейна амортизация</h2><div class="calc">
-  <label>Стойност, €<input type="number" id="cv" value="4320"></label><label>Остатъчна, €<input type="number" id="cr" value="0"></label><label>Години<input type="number" id="cy" value="3"></label></div>
-  <p class="res" id="cres"></p></section>`;
- wireEdit();wireFilt("acc");wireAcc();const calc=()=>{const v=+$("#cv").value,r=+$("#cr").value,y=+$("#cy").value;
-  $("#cres").innerHTML=y>0&&v>=r?`Годишно <b>${fmt((v-r)/y)} €</b> · месечно <b>${fmt((v-r)/y/12)} €</b>`:"Въведете стойност ≥ остатъчна и срок над 0."};
- ["#cv","#cr","#cy"].forEach(s=>$(s).oninput=calc);calc();
+ <div class="row"><button class="btn" id="chk" style="background:var(--ledger);border-color:var(--ledger)">Провери</button><button class="btn ghost" id="skip" style="color:var(--ledger);border-color:var(--ledger)">${ci<L.length-1?"Пропусни":"Пропусни и завърши"}</button></div><div id="fb"></div></section>`;
+ wireEdit();wireFilt("acc");wireAcc();
  $("#skip").onclick=()=>{recordSkip("acc",catOf.acc(c));if(ci<L.length-1){ci++;V.acc()}else{ci=0;go("progress")}};
  $("#chk").onclick=()=>{let ok,sol="";$("#skip").hidden=true;
   if(T==="num"){ok=Math.abs(+$("#num").value-c.answer)<.005}
