@@ -359,7 +359,7 @@ V.bel=()=>{const L=listOf("bel");if(qi>=L.length)qi=0;const idx=L[qi],q=BEL[idx]
  if(T==="text"){$("#chk").onclick=()=>{const v=$("#ans").value.trim().toLowerCase();if(!v){$("#ans").focus();return}
    $("#ans").disabled=true;$("#chk").disabled=true;done(q.answers.includes(v))}}
  else if(T==="open"){const ta=$("#oans");ta.oninput=()=>{const t=ta.value;$("#ocnt").textContent=`${wcnt(t)} думи · ${(t.match(/[^.!?…]+[.!?…]+/g)||[]).length} изречения`};
-  $("#chk").onclick=()=>{if(wcnt(ta.value)<5){ta.focus();return}ta.readOnly=true;$("#chk").hidden=true;$("#skip").hidden=true;
+  $("#chk").onclick=()=>{if(!wcnt(ta.value)){$("#fb").innerHTML=`<p class="note">Напиши отговора си, преди да сравниш.</p>`;ta.focus();return}ta.readOnly=true;$("#chk").hidden=true;$("#skip").hidden=true;
    $("#fb").innerHTML=`<div class="fb"><strong>Примерен отговор</strong>${esc(q.model)}${refHTML(q)}</div>
     <h2>Кое има в твоя отговор?</h2><div class="checks">${q.criteria.map((c,i)=>`<label><input type="checkbox" id="oc${i}"> ${esc(c)}</label>`).join("")}</div>
     <div class="row"><button class="btn ghost" id="oai" hidden>AI обратна връзка</button><button class="btn ghost" id="oaistop" hidden>Спри</button></div><div id="oaiout" class="stack"></div>
